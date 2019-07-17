@@ -3,10 +3,10 @@ A trivial python cli wrapper designed to make interacting with Facebook's Open S
 
 ## Usage
 The Warp CLI supports 4 main transfer modes:
-    '--ship': Send a remote directory to another remote directory.
-    '--pull': Pull a remote directory to a local directory.
-    '--push': Send a local directory to a remote directory.
-    '--daemon': Start a reciver daemon on a local directory and export a file containing the connection URL and meta-data.
+- '--ship': Send a remote directory to another remote directory.
+- '--pull': Pull a remote directory to a local directory.
+- '--push': Send a local directory to a remote directory.
+- '--daemon': Start a reciver daemon on a local directory and export a file containing the connection URL and meta-data.
 
 ### Usage Example
 To send a directory between servers from a remote device:  
