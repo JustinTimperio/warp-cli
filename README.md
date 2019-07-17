@@ -9,14 +9,14 @@ The Warp CLI supports 4 main transfer modes:
     '--daemon': Start a reciver daemon on a local directory and export a file containing the connection URL and meta-data.
 
 ### Usage Example
-To send a directory between servers from a remote device:
-    `warp --ship source_ssh_alias /dir/to/send dest_ssh_alias /dir/to/recive`
-To fetch a remote directory:
-    `warp --pull /dir/to/recive source_ssh_alias /dir/to/send`
-To send a local directory:
-    `warp --push /dir/to/send dest_ssh_alias /dir/to/recive`
-To start a daemon on a directory:
-    `warp --daemon /dir/to/recive`
+To send a directory between servers from a remote device:  
+`warp --ship source_ssh_alias /dir/to/send dest_ssh_alias /dir/to/recive`  
+To fetch a remote directory:  
+`warp --pull /dir/to/recive source_ssh_alias /dir/to/send`  
+To send a local directory:  
+`warp --push /dir/to/send dest_ssh_alias /dir/to/recive`  
+To start a daemon on a directory:  
+`warp --daemon /dir/to/recive`  
 
 ## Setup
 Since Warp uses multiple dependencies and configuration files to transfer directories, a detailed set of setup utilities are provided.
