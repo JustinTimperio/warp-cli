@@ -1,11 +1,12 @@
 ﻿# Warp-CLI - _ALPHA_
 A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
+
 ![Demo_Gif](https://imgur.com/N5uSgNV.gif)
 
 ## Abstract
 [WDT](https://github.com/facebook/wdt) is designed to provide the lowest possible total transfer time when transferring files(to be only hardware and network limited). WDT provides many advantages over most file transfer protocols including: native concurrency, end-to-end encryption, IPV6 support, and the ability to easily achieve +40Gbit speeds when supported. Unlike most file transfer solutions (Except [NORM](https://www.nrl.navy.mil/itd/ncs/products/norm)) WDT provides a native parallel solution for transferring files by separating files into chunks then queueing them across an arbitrary number of threads and TCP connections. In most cases, file transfer times are dramatically reduced compared to traditional methods like FTP or HTTP.
 
-While WDT provides several benefits, it requires a lengthy build process making it unsuitable for one time transfers. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains comparatively. Since WDT is designed to fully saturate even the highest-end hardware, it is likely to overwhelm even the highest-end consumer and enterprise networking hardware. Please consider this when transferring more than a 1TB of files.
+While WDT provides several benefits, it requires a lengthy build process making it unsuitable for one time transfers. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains comparatively. Since WDT is designed to fully saturate even the highest-end hardware, it is likely to overwhelm even enterprise networking hardware. Please consider this when transferring more than a 1TB of files.
 
 ## Design
 Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](https://github.com/facebook/wdt/wiki/Getting-Started-with-the-WDT-command-line). While the tool works extremely well, building performant commands for daily use is often unwieldy.
@@ -13,16 +14,16 @@ Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](
 For example: 
 `wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/recv | ssh ssh.alias wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/fetch/ -`
 
-Warp-CLI shortens this command to:
+Warp-CLI shortens this command to:\
  `warp -f ssh.alias /dir/to/fetch/ /dir/to/recv` 
 
 ### Macros
 Warp-CLI also includes a powerful macro system for repeating custom transfers with a single command. Macros are pre-formed transfer commands (stored in /var/app/warp-cli/macros) that are invoked with `warp -m macro_name`.
 
-To generate a macro:
+To generate a macro:\
  `warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -tr 16 -ri 10000 -ow true`
 
-This macro can now be called with:
+This macro can now be called with:\
  `warp -m daily_backup`
 
 ### OpenSSH
@@ -30,7 +31,7 @@ Warp uses ssh to securely share connection URLs via a standard Linux pipe. It ex
 #### URL Sharing While Using  `--ship`
 Warp-CLI uses the recommended method for transferring URLs except for the command to send directories between two remote machines. URLs are returned to the host rather than being tunneled through the remote machine to the next remote machine. This allows two remote servers to transfer files between one another without having the permission needed to connect directly via ssh. 
 #### SSH Aliases 
-Since Warp-CLI is designed mainly for daily use, it is highly recommended(if not assumed) that you already have an ssh alias for the machine you are connecting to. If you don't have an existing SSH alias for the server you are transferring files to, please consider [creating one.](https://www.howtogeek.com/75007/stupid-geek-tricks-use-your-ssh-config-file-to-create-aliases-for-hosts/)
+Since Warp-CLI is designed mainly for daily use, it is highly recommended(if not assumed) that you already have an ssh alias for the server you are connecting to. If you don't have an existing SSH alias for the server you are transferring files to, please consider [creating one.](https://www.howtogeek.com/75007/stupid-geek-tricks-use-your-ssh-config-file-to-create-aliases-for-hosts/)
 
 ## Usage
 Warp-CLI features a number of shortcuts that attempt to make sending files as trivial and intuitive as possible. Additionally, warp.py can be imported into any python3 script, which provides more granular control over transfers. To see a list of all available options use `wdt --help | less`.
