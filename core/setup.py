@@ -11,8 +11,9 @@ def setup_warp(base_dir='/var/app/warp-cli'):
     mkdir(base_dir, 'r')
     mkdir(base_dir + '/pool', 'r')
     mkdir(base_dir + '/inbound', 'r')
-    open_permissions('/var/app/warp-cli')
-    
+    open_permissions(base_dir)
+    ## link warp to warp.py
+    os.system('sudo ln -s ' + base_dir + '/core/warp.py /usr/bin/warp') 
     ## build and setup wdt dependencies depending on linux distro
     os_name = os_distro() 
    ############# 

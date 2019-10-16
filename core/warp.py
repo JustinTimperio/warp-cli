@@ -1,3 +1,4 @@
+#! /usr/bin/python
 #### WDT Wrapper for Uni-Cast - https://github.com/facebook/wdt
 ## Version 1.5
 from global_defuns import * 
@@ -148,7 +149,7 @@ if args.uninstall:
     sys.exit('Uninstall Complete!')
 
 ###  excute final cmd or return --help
-if len(cmd) > 0:
+if 'cmd' in locals():
     warp(cmd)
 else:
     parser.print_help()

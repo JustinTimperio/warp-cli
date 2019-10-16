@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 ###### Useful Defs for Python3 Projects
 #### Version - 1.3
 

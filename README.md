@@ -67,7 +67,7 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
 - '-rm, --uninstall': Uninstall Warp-CLI and config files.
     `warp --uninstall`
 
-## Setup
+## Setup _STILL UNDER DEVELOPMENT_
 Since Warp-CLI uses multiple dependencies and configuration files to transfer directories, the script attempts to provide a fully automated installation process for most linux flavors. If your flavor is not supported, please refer to the [manual install documentation,](https://github.com/facebook/wdt/blob/master/build/BUILD.md) Once you install WDT and its dependencies, Warp-CLI will function normally.  
 
 ### Automatic Installation
