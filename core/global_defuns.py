@@ -1,5 +1,5 @@
 ###### Useful Defs for Python3 Projects
-#### Version - 1.2.4
+#### Version - 1.3
 
 ######
 ## Basic Functions
@@ -102,6 +102,13 @@ def rm_dir(dir_path, sudo):
             os.system('rm -r ' + dir_path)
 
 ######
+### Linux System Commands
+######
+def cpu_core_count():
+    core_count = subprocess.check_output("cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l", shell=True)
+    return str(core_count)[2:-3]
+
+######
 ### Linux System Package Commands
 ######
 def pacman(package, arg='-S'):
@@ -120,5 +127,5 @@ def aurman_install(packages):
     os.system("aurman -S --needed " + packages)
 
 def os_distro():
-    os_name = subprocess.Popen('cat /etc/os-release | grep PRETTY_NAME= | cut -c 14- | rev | cut -c 2- | rev', shell=True, stdout=subprocess.PIPE).stdout
-    return os_name
+    os_name = subprocess.check_output('cat /etc/os-release | grep PRETTY_NAME= | cut -c 14- | rev | cut -c 2- | rev', shell=True)
+    return str(os_name)[2:-3]
