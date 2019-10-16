@@ -1,9 +1,9 @@
-﻿# Warp-CLI _ALPHA-STATE_
-A cli wrapper designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
+﻿# Warp-CLI - _ALPHA_
+A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
 ![Demo_Gif](https://imgur.com/N5uSgNV.gif)
 
 ## Abstract
-WDT is designed to provide the lowest possible total transfer time when transferring files(to be only hardware and network limited). WDT provides many advantages over most file transfer protocols including: native concurrency, end-to-end encryption, IPV6 support, and the ability to easily achieve +40Gbit speeds when supported. Unlike most file transfer solutions (Except [NORM](https://www.nrl.navy.mil/itd/ncs/products/norm)) WDT provides a native parallel solution for transferring files by separating files into chunks then queueing them across an arbitrary number of threads and TCP connections. In most cases, file transfer times are dramatically reduced compared to traditional methods like FTP or HTTP.
+[WDT](https://github.com/facebook/wdt) is designed to provide the lowest possible total transfer time when transferring files(to be only hardware and network limited). WDT provides many advantages over most file transfer protocols including: native concurrency, end-to-end encryption, IPV6 support, and the ability to easily achieve +40Gbit speeds when supported. Unlike most file transfer solutions (Except [NORM](https://www.nrl.navy.mil/itd/ncs/products/norm)) WDT provides a native parallel solution for transferring files by separating files into chunks then queueing them across an arbitrary number of threads and TCP connections. In most cases, file transfer times are dramatically reduced compared to traditional methods like FTP or HTTP.
 
 While WDT provides several benefits, it requires a lengthy build process making it unsuitable for one time transfers. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains comparatively. Since WDT is designed to fully saturate even the highest-end hardware, it is likely to overwhelm even the highest-end consumer and enterprise networking hardware. Please consider this when transferring more than a 1TB of files.
 
@@ -55,20 +55,20 @@ To provide optimal performance, Warp-CLI throttles transfers to ~90% the capacit
 ### Utilities
 Warp-CLI provides a number of utilities to streamline the daily use of WTD when sending files in high frequency.
 
-- '-d, --daemon': Start a permanent receiver daemon on a local directory and export a file containing the connection URL and meta-data.\
-    `warp --daemon /dir/to/recive`
-- '-m, --macro': Excute a custom macro from /var/app/warp-cli/config/ by name dir.\
+- '-m, --macro': Excute a custom macro from /var/app/warp-cli/config/ by name.\
     `warp -m macro_name`
 - '-gm, --gen_macro': Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
     `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/recive -tr 16 -ri 10000 -ow true`
 - '-cp, --custom_parms': Inject any additional parameters available from `wdt --help`.\
     `warp -f /dir/to/recive source_ssh /dir/to/send -c '-skip_writes=true -start_port=12345'`
+- '-d, --daemon': Start a permanent receiver daemon on a local directory and export a file containing the connection URL and meta-data.\
+    `warp --daemon /dir/to/recive`
 - '-ir, --install_remote': Attempt to install WDT on a remote machine through ssh.\
     `warp -ir ssh_alias`
 - '-rm, --uninstall': Uninstall Warp-CLI and config files.\
     `warp --uninstall`
 
-## Setup _STILL UNDER DEVELOPMENT_
+## Setup - _STILL UNDER DEVELOPMENT_
 Since Warp-CLI uses multiple dependencies and configuration files to transfer directories, the script attempts to provide a fully automated installation process for most linux flavors. If your flavor is not supported, please refer to the [manual install documentation,](https://github.com/facebook/wdt/blob/master/build/BUILD.md) Once you install WDT and its dependencies, Warp-CLI will function normally.  
 
 ### Automatic Installation
