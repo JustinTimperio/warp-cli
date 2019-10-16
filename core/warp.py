@@ -61,20 +61,20 @@ def start_recv_daemon(recv_path='/var/app/warp-cli/inbound'):
 ############
 ## Argument Parser
 ########
-parser = argparse.ArgumentParser(description="A simple wrapper for the WDT CLI Tool. For additional support use 'wdt --help | less'")
-parser.add_argument("-s", "--ship", nargs=4, help="Warp a remote directory to another remote directory. Options: src_ssh_alias, src_path, recv_ssh_alias, recv_path")
-parser.add_argument("-p", "--push", nargs=3, help="Warp a local directory to a remote directory. Options: src_path, recv_ssh_alias, recv_path")
-parser.add_argument("-f", "--fetch", nargs=3, help="Warp a remote directory to a local directory. Options: src_ssh_alias, src_path, recv_path")
+parser = argparse.ArgumentParser(description="A simple wrapper for the WDT CLI Tool.")
+parser.add_argument("-s", "--ship", nargs=4, metavar=('SRC_SSH_ALIAS','SRC_PATH','RECV_SSH_ALIAS','RECV_SSH_ALIAS'), help="Warp a remote directory to another remote directory.")
+parser.add_argument("-p", "--push", nargs=3, metavar=('SRC_PATH','RECV_SSH_ALIAS','RECV_PATH'), help="Warp a local directory to a remote directory.")
+parser.add_argument("-f", "--fetch", nargs=3, metavar=('SRC_SSH_ALIAS','SRC_PATH','RECV_PATH'), help="Warp a remote directory to a local directory.")
 ### optional arguments 
-parser.add_argument("-tr", "--threads", default="8", help="Set the number of threads/ports to participate in this transfer") 
-parser.add_argument("-ri", "--report_interval", default="3000", help="Update interval in milliseconds for transfer report updates.")
-parser.add_argument("-ts", "--throttle_speed", default="110", help=" Throttle the transfer to an average mbytes per second.")
-parser.add_argument("-ow", "--overwrite", default="false", help="Allow the receiver to overwrite existing files in a directory.")
-parser.add_argument("-cp", "--custom_parms", nargs='*', default="", help="Inject any additional parameters available in `wdt --help`.") 
+parser.add_argument("-tr", "--threads", default="8", metavar='INT', help="Set the number of threads/ports for WDT to use.") 
+parser.add_argument("-ri", "--report_interval", default="3000", metavar='INT', help="Update interval in milliseconds for transfer report updates.")
+parser.add_argument("-ts", "--throttle_speed", default="110", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
+parser.add_argument("-ow", "--overwrite", default="false", metavar='BOOL', help="Allow the receiver to overwrite existing files in a directory.")
+parser.add_argument("-cp", "--custom_parms", nargs='*', metavar="-CUSTOM_PARM value", default="", help="Inject any additional parameters available in `wdt --help`.") 
 ### utilities
-parser.add_argument("-d", "--daemon", help="Start a receiver daemon on a directory. Returns a connection url to /var/app/wdt.")
-parser.add_argument("-m", "--macro", help="Execute a macro by name from /var/app/warp-cli/macros.")
-parser.add_argument("-gm", "--gen_macro", help="Generate a new macro. This will overwrite a old macro if named the same.")
+parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to /var/app/wdt.")
+parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from /var/app/warp-cli/macros.")
+parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
 parser.add_argument("-in", "--install", help="Attempt an automated install of WDT and dependencies.")
 parser.add_argument("-rm", "--uninstall", help="Remove Warp-CLI and config files.")
 ###

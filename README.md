@@ -45,7 +45,7 @@ Warp-CLI provides three core transfer modes:
     `warp -p /dir/to/push dest_ssh /dir/to/recive`
 
 ### Flags
-- `-tr, --threads` default=8: In most cases, 8 threads is sufficient to saturate the connection. You may want to raise or lower this depending on your hardware. 
+- `-tr, --threads` - default=8: In most cases, 8 threads is sufficient to saturate the connection. You may want to raise or lower this depending on your hardware. 
 - `-ri, --report_interval`- default=5000: This limits the heartbeat report to 5000 milliseconds(5 seconds).
 - `-ts, --throttle_speed` - default=105: This setting throttles the transfer to an average mbytes per second.
 - `-ow, --overwrite` - default=false: Allow the receiver to overwrite existing files.
