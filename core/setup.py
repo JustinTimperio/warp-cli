@@ -19,21 +19,24 @@ def setup_warp(base_dir='/var/app/warp-cli'):
    ############# 
     if 'arch' in os_name.lower():
         pacman('cmake jemalloc google-glog boost double-conversion openssl')
-        
-        aurman('wdt-git')
+       
+        aur_tool = input('Do you use a AUR Tool? If so enter the install command for your Tool./nI.E. "pacaur -S": ')
+        if len(aur_tool) > 0:
+            os.system(aur_tool + " wdt-git")
+        else:
+            sys.exit('Refer to manual build guide. Building without an AUR manager is NOT supported.')
    ############# 
     elif 'ubuntu' in os_name.lower():
-        apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl')
+        apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev')
    ############# 
-    elif 'fedora' or 'redhat' or 'centos' in os_name.lower():
+    elif 'fedora' or 'redhat' in os_name.lower():
         yum('cmake jemalloc glog boost double-conversion openssl')
    ############# 
-    #  else:
-    #      sys.exit('Automated package installs for ' + os_name + ' are not supported.')
+    else:
+        sys.exit('Automated package installs for ' + os_name + ' are not supported.')
 
-    ## download and build wdt for source
-    os.system('cd ' + base_dir + ' && sudo git clone https://github.com/facebook/wdt.git')
-    os.system('sudo cmake ' + base_dir + '')
+    ## download and build wdt from source
+    os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/wdt.git')
+    os.system('cd ' + base + '&& cd .. && git clone https://github.com/facebook/folly.git')
+    #  os.system('sudo cmake ' + base_dir)
 
-#  def gen_ssh_alias():
-    #  input
