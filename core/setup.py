@@ -36,7 +36,7 @@ def setup_warp(base_dir='/var/app/warp-cli'):
         sys.exit('Automated package installs for ' + os_name + ' are not supported.')
 
     ## download and build wdt from source
+    os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/folly.git')
     os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/wdt.git')
-    os.system('cd ' + base + '&& cd .. && git clone https://github.com/facebook/folly.git')
     #  os.system('sudo cmake ' + base_dir)
 
