@@ -21,8 +21,9 @@ def setup_warp(base_dir='/var/app/warp-cli'):
         aur_tool = input('Do you use a AUR Tool? If so enter the install command for your Tool./nI.E. "pacaur -S": ')
         if len(aur_tool) > 0:
             os.system(aur_tool + " wdt-git")
+            return
         else:
-            sys.exit('Refer to manual build guide. Building without an AUR manager is NOT supported.')
+            sys.exit('Refer to the manual build guide if you are stupid and don\'t want to keep your packages updated. :P')
    ############# 
     elif 'ubuntu' in os_name.lower():
         apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev')
@@ -38,6 +39,6 @@ def setup_warp(base_dir='/var/app/warp-cli'):
     os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/wdt.git')
     os.system('mkdir ' + base_dir + '/wdt/_build')
     os.system('cd ' + base_dir + '/wdt/_build && cmake ' + base_dir + '/wdt -DBUILD_TESTING=on')
-    os.system('cd ' + base_dir + '/wdt/_build && sudo make -j')
+    os.system('cd ' + base_dir + '/wdt/_build && make -j')
     os.system('cd ' + base_dir + '/wdt/_build && sudo make install')
 
