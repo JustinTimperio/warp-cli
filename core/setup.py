@@ -18,8 +18,6 @@ def setup_warp(base_dir='/var/app/warp-cli'):
     os_name = os_distro() 
    ############# 
     if 'arch' in os_name.lower():
-        pacman('cmake jemalloc google-glog boost double-conversion openssl')
-       
         aur_tool = input('Do you use a AUR Tool? If so enter the install command for your Tool./nI.E. "pacaur -S": ')
         if len(aur_tool) > 0:
             os.system(aur_tool + " wdt-git")
@@ -38,6 +36,8 @@ def setup_warp(base_dir='/var/app/warp-cli'):
     ## download and build wdt from source
     os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/folly.git')
     os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/wdt.git')
-    #  os.system('sudo cmake ' + base_dir + '/wdt -DBUILD_TESTING=on')
-    #  os.system('sudo make ' + base_dir + '/wdt -DBUILD_TESTING=on')
+    os.system('mkdir ' + base_dir + '/wdt/_build')
+    os.system('cd ' + base_dir + '/wdt/_build && cmake ' + base_dir + '/wdt -DBUILD_TESTING=on')
+    os.system('cd ' + base_dir + '/wdt/_build && sudo make -j')
+    os.system('cd ' + base_dir + '/wdt/_build && sudo make install')
 

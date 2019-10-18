@@ -76,7 +76,7 @@ Since Warp-CLI uses multiple dependencies and configuration files to transfer di
 To install WDT and Warp-CLI automaticly on your machine:
 1. `sudo mkdir /var/app && sudo chmod 777 /var/app`
 2. `cd /var/app && git clone https://github.com/JustinTimperio/warp-cli.git`
-3. `python3 /var/app/warp-cli/core/warp.py --install`
+3. `python3 /var/app/warp-cli/core/warp.py --install /var/app/warp-cli`
 
 ### Remote Installation
 Since WDT needs to be installed on both machines participating in a transfer, the script attempts to provide an automated install via SSH.  This command will walk you through a set of input prompts if your remote machines os is supported. If not, refer to the manual build guide for the server.
