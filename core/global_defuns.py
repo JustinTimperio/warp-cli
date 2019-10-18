@@ -118,8 +118,8 @@ def pacman(package, arg='-S'):
 def apt(package, arg='install'):
     os.system("sudo apt-get " + arg + " " + package)
 
-def yum(package, arg='install'):
-    os.system("sudo yum " + arg + " " + package)
+def zypper(package, arg='install'):
+    os.system("sudo zypper " + arg + " " + package)
 
 def pip_install(packages):
     os.system("sudo pip install " + packages)

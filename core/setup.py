@@ -25,9 +25,16 @@ def setup_warp(base_dir='/var/app/warp-cli'):
         else:
             sys.exit('Refer to the manual build guide if you are stupid and don\'t want to keep your packages updated. :P')
    ############# 
-    elif 'ubuntu' or 'debian' in os_name.lower():
+    elif 'ubuntu 19' or 'ubuntu 18' or 'debian' in os_name.lower():
+        apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev')
+    
+    elif 'ubuntu 16' in os_name.lower():
         apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev')
    ############# 
+    elif 'opensuse' in os_name.lower():
+        zypper('-t pattern devel_C_C++')
+        zypper('cmake jemalloc google-glog boost-base boost-extra double-conversion openssl ')
+
     elif 'fedora' or 'redhat' in os_name.lower():
         yum('cmake jemalloc glog boost double-conversion openssl')
    ############# 
