@@ -8,9 +8,12 @@ import argparse
 ## WDT CLI Wrapper
 ########
 def ship(src_ssh, src_path, recv_ssh, recv_path):
-    global cmd
-    cmd = ("URL=`ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path + "` && " +
-              "echo $URL | ssh " + src_ssh + " wdt" + options + " -directory " + src_path + " -")
+    receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path) 
+    receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
+    connection_url = str(receiver_process.stdout.readline().strip())[1:] 
+    sender_cmd = (connection_url + " | ssh " + src_ssh + " wdt" + options + " -directory " + src_path + " -")
+    subprocess.Popen(sender_cmd, stdout=subprocess.PIPE, shell=True)
+    sys.exit()
 
 def push(src_path, recv_ssh, recv_path):
     global cmd
@@ -46,7 +49,7 @@ def run_macro(macro_name):
 ########
 def start_recv_daemon(recv_path='/var/app/warp-cli/inbound'):
     import getpass, datetime
-    receiver_cmd = ("wdt -run_as_daemon -overwrite -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
+    receiver_cmd = ("wdt -run_as_daemon -overwrite true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
     ## start daemon and return connection url
     connection_url = str(receiver_process.stdout.readline().strip())[1:] 
@@ -70,7 +73,7 @@ parser.add_argument("-tr", "--threads", default="8", metavar='INT', help="Set th
 parser.add_argument("-ri", "--report_interval", default="3000", metavar='INT', help="Update interval in milliseconds for transfer report updates.")
 parser.add_argument("-ts", "--throttle_speed", default="110", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
 parser.add_argument("-ow", "--overwrite", default="false", metavar='BOOL', help="Allow the receiver to overwrite existing files in a directory.")
-parser.add_argument("-cp", "--custom_parms", nargs='*', metavar="-CUSTOM_PARM value", default="", help="Inject any additional parameters available in `wdt --help`.") 
+parser.add_argument("-cp", "--custom_parms", nargs='*', default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.") 
 ### utilities
 parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to /var/app/wdt.")
 parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from /var/app/warp-cli/macros.")
@@ -127,6 +130,8 @@ if args.daemon:
 if args.gen_macro:
     if len(cmd) == 0:
         sys.exit('No Command to Convert to Macro!')
+    elif args.ship:
+        sys.exit('Macros for --ship commands are NOT yet supported!')
     else:
         warp(cmd, gen_macro_flg=True, macro_name=args.gen_macro)
         sys.exit("Macro Successfully Generated!")

@@ -131,5 +131,5 @@ def aurman_install(packages):
     os.system("aurman -S --needed " + packages)
 
 def os_distro():
-    os_name = subprocess.check_output('cat /etc/os-release | grep PRETTY_NAME= | cut -c 14- | rev | cut -c 2- | rev', shell=True)
+    os_name = subprocess.check_output('cat /etc/os-release | grep PRETTY_NAME= | cut -c 13-', shell=True)
     return str(os_name)[2:-3]
