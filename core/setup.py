@@ -38,5 +38,5 @@ def setup_warp(base_dir='/var/app/warp-cli'):
     os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/folly.git')
     os.system('cd ' + base_dir + ' && git clone https://github.com/facebook/wdt.git')
     os.system('mkdir ' + base_dir + '/wdt/_build')
-    os.system('cd ' + base_dir + '/wdt/_build && bash cmake ' + base_dir + '/wdt && make -j && sudo make install')
+    os.system('cd ' + base_dir + '/wdt/_build && cmake ' + base_dir + '/wdt && make -j && sudo make install')
 
