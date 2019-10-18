@@ -1,6 +1,6 @@
-#! /usr/bin/env python3
+#! /usr/bin/python3
 ###### Useful Defs for Python3 Projects
-#### Version - 1.3
+#### Version - 1.5
 
 ######
 ## Basic Functions
@@ -114,6 +114,9 @@ def cpu_core_count():
 ######
 def pacman(package, arg='-S'):
     os.system("sudo pacman " + arg + " " + package + " --needed")
+
+def yum(package, arg='install'):
+    os.system("sudo yum " + arg + " " + package)
 
 def apt(package, arg='install'):
     os.system("sudo apt-get " + arg + " " + package)
