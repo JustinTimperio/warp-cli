@@ -75,7 +75,7 @@ parser.add_argument("-cp", "--custom_parms", nargs='*', metavar="-CUSTOM_PARM va
 parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to /var/app/wdt.")
 parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from /var/app/warp-cli/macros.")
 parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
-parser.add_argument("-in", "--install", help="Attempt an automated install of WDT and dependencies.")
+parser.add_argument("-in", "--install", default='/var/app/warp-cli', help="Attempt an automated install of WDT and dependencies.")
 parser.add_argument("-rm", "--uninstall", help="Remove Warp-CLI and config files.")
 ###
 args = parser.parse_args()
