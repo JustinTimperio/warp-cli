@@ -25,7 +25,7 @@ def setup_warp(base_dir='/var/app/warp-cli'):
         else:
             sys.exit('Refer to the manual build guide if you are stupid and don\'t want to keep your packages updated. :P')
    ############# 
-    elif 'ubuntu' in os_name.lower():
+    elif 'ubuntu' or 'debian' in os_name.lower():
         apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev')
    ############# 
     elif 'fedora' or 'redhat' in os_name.lower():
