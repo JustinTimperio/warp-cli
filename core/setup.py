@@ -18,23 +18,21 @@ def setup_warp(base_dir='/var/app/warp-cli'):
     ## build and setup wdt dependencies depending on linux distro
     os_name = os_distro() 
    ############# 
-    if 'arch' in os_name.lower():
-        aur_tool = input('Do you use a AUR Tool? If so enter the install command for your Tool./nI.E. "pacaur -S": ')
+    import re
+    if re.search(r'arch', os_name.lower()):
+        aur_tool = input('Do you use a AUR Tool? If so enter the install command for your Tool. /n I.E. "pacaur -S": ')
         if len(aur_tool) > 0:
             os.system(aur_tool + " wdt-git")
             sys.exit('Done!')
         else:
             sys.exit('Refer to the manual build guide OR don\'t be stupid a use a AUR manager. :P')
    ############# 
-    elif 'fedora 30' or 'fedora 29' or 'fedora 28' in os_name.lower():
+    elif re.search(r'(fedora 30|fedora 29|fedora 28)', os_name.lower()):
         yum('cmake boost-devel openssl jemalloc glog-devel double-conversion-devel make automake gcc gcc-c++ kernel-devel gtest-devel openssl-devel')
    ############# 
-    elif 'ubuntu 19' or 'ubuntu 18' or 'debian gnu/linux 9' or 'debian gnu/linux 10' in os_name.lower():
+    elif re.search(r'(ubuntu 19|ubuntu 18|debian gnu/linux 9|debian gnu/linux 10)', os_name.lower()):
         apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev')
    ############# 
-    #  elif 'opensuse' in os_name.lower():
-        #  zypper('-t pattern devel_C_C++')
-        #  zypper('cmake jemalloc google-glog boost-base boost-extra double-conversion openssl ')
     else:
         sys.exit('Automated package installs for ' + os_name + ' are not supported.')
 
