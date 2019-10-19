@@ -1,5 +1,6 @@
 ﻿# Warp-CLI - _ALPHA_
 A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
+*This tool is still under development. Please report any bugs or feature requests*
 
 ![Demo_Gif](https://imgur.com/N5uSgNV.gif)
 
@@ -9,7 +10,7 @@ A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfe
 While WDT provides several benefits, it requires a lengthy build process making it unsuitable for one time transfers. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains comparatively. Since WDT is designed to fully saturate even the highest-end hardware, it is likely to overwhelm even enterprise networking hardware. Please consider this when transferring more than a 1TB of files.
 
 ## Performance Gains
-Below are timed transfers over my personal home network which is 1 Gigiabit. Each progressive transfer increases the the total size of the transfer in GB, while reducing the total number of files being transfered. WDT easily maintains full 1 Gigabit saturation accross all 3 transfers while HPN-SFTP struggles to transfer multiple small files but reaches full saturation while transfering large files. With +10 Gigiabit networking hardware you can expect to WDT scale to +40 Gigiabit and HPN-SSH to scale to around 5 Gigiabit. 
+Below are timed transfers over my personal home network which is 1 Gigiabit. Each progressive transfer increases the total size of the transfer in GB, while reducing the total number of files being transfered. WDT easily maintains full 1 Gigabit saturation across all 3 transfers while HPN-SFTP struggles to transfer multiple small files but reaches full saturation while transferring large files. With +10 Gigabit networking hardware you can expect to WDT scale to +40 Gigabit and HPN-SSH to scale to around 5 Gigabit. 
 
 ![Performance Graphs](https://i.imgur.com/GL8dBN2.png)
 
@@ -54,7 +55,7 @@ To provide optimal performance, Warp-CLI throttles transfers to ~90% the capacit
 ### Utilities
 Warp-CLI provides a number of utilities to streamline the daily use of WTD when sending files in high frequency.
 
-- '-m, --macro': Excute a custom macro from /var/app/warp-cli/config/ by name.\
+- '-m, --macro': Execute a custom macro from /var/app/warp-cli/config/ by name.\
     `warp -m macro_name`
 - '-gm, --gen_macro': Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
     `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow true`
@@ -70,17 +71,13 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
 ## Setup - _STILL UNDER DEVELOPMENT_
 Since Warp-CLI uses multiple dependencies and configuration files to transfer directories, the script attempts to provide a fully automated installation process for most linux flavors. If your flavor is not supported, please refer to the [manual install documentation,](https://github.com/facebook/wdt/blob/master/build/BUILD.md) Once you install WDT and its dependencies, Warp-CLI will function normally.  
 
-*So far, automatic installation is available for Ubuntu 18.xx, Ubuntu 19.xx, Arch Linux, Fedora 28, Fedora 29, and Fedora 30.*
+*So far, automatic installation is available for Ubuntu 18.xx, Ubuntu 19.xx, Debian 8.x, Debian 9.x, Arch Linux, Fedora 28, Fedora 29, and Fedora 30.*
 
 ### Automatic Installation
 To install WDT and Warp-CLI automaticly on your machine:
 1. `sudo mkdir /var/app && sudo chmod 777 /var/app`
 2. `cd /var/app && git clone https://github.com/JustinTimperio/warp-cli.git`
 3. `python3 /var/app/warp-cli/core/warp.py --install /var/app/warp-cli`
-
-### Remote Installation
-Since WDT needs to be installed on both machines participating in a transfer, the script attempts to provide an automated install via SSH.  This command will walk you through a set of input prompts if your remote machines os is supported. If not, refer to the manual build guide for the server.
-`warp -ir remote_ssh`
 
 ### Uninstall
 Warp-CLI will remove itself from /var/app/ but WDT will remain installed.

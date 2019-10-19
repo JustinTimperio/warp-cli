@@ -25,7 +25,7 @@ def setup_warp(base_dir='/var/app/warp-cli'):
             os.system(aur_tool + " wdt-git")
             sys.exit('Done!')
         else:
-            sys.exit('Refer to the manual build guide OR don\'t be stupid a use a AUR manager. :P')
+            sys.exit('Refer to the manual build guide OR don\'t be stupid and use a AUR manager. :P')
    ############# 
     elif re.search(r'(fedora 30|fedora 29|fedora 28)', os_name.lower()):
         yum('cmake boost-devel openssl jemalloc glog-devel double-conversion-devel make automake gcc gcc-c++ kernel-devel gtest-devel openssl-devel')
