@@ -11,7 +11,7 @@ While WDT provides several benefits, it requires a lengthy build process making 
 ## Performance Gains
 Below are timed transfers over my personal home network which is 1 Gigiabit. Each progressive transfer increases the the total size of the transfer in GB, while reducing the total number of files being transfered. WDT easily maintains full 1 Gigabit saturation accross all 3 transfers while HPN-SFTP struggles to transfer multiple small files but reaches full saturation while transfering large files. With +10 Gigiabit networking hardware you can expect to WDT scale to +40 Gigiabit and HPN-SSH to scale to around 5 Gigiabit. 
 
-![Performance Graphs](https://imgur.com/GL8dBN2)
+![Performance Graphs](https://i.imgur.com/GL8dBN2.png)
 
 ## Design
 Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](https://github.com/facebook/wdt/wiki/Getting-Started-with-the-WDT-command-line). While the tool works extremely well, building performant commands for daily use is often unwieldy.
