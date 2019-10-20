@@ -10,9 +10,9 @@ A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfe
 While WDT provides several benefits, it requires a lengthy build process making it unsuitable for one time transfers. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains comparatively. Since WDT is designed to fully saturate even the highest-end hardware, it is likely to overwhelm even enterprise networking hardware. Please consider this when transferring more than a 1TB of files.
 
 ## Performance Gains
-Below are timed transfers(in seconds) over my personal home network which is 1 Gigiabit. Each progressive transfer increases the total size of the transfer in GB, while reducing the total number of files being transfered. WDT easily maintains full 1 Gigabit saturation across all 3 transfers while HPN-SFTP struggles to transfer multiple small files but reaches full saturation while transferring large files. With +10 Gigabit networking hardware you can expect to WDT scale to +40 Gigabit and HPN-SSH to scale to around 5 Gigabit. 
+Below are timed downloads(in seconds) over my personal network which is 1 Gigabit. Each progressive transfer increases the total size of the transfer in GB, while reducing the total number of files being transfered. WDT easily maintains near full 1 Gigabit saturation across all 3 transfers while HPN-SFTP and SSH struggles to transfer multiple small files(single-thread limited). With encryption disabled HPN-SSH reaches full saturation while transferring large files while stock SSH continues to struggle. If you have access to +10 Gigabit networking hardware you can expect WDT to scale to 40 ~Gigabit and HPN-SSH to scale to ~10 Gigabit. 
 
-![Performance Graphs](https://i.imgur.com/GL8dBN2.png)
+![Performance Graphs](https://i.imgur.com/ax7eKzj.png)
 
 ## Design
 Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](https://github.com/facebook/wdt/wiki/Getting-Started-with-the-WDT-command-line). While the tool works extremely well, building performant commands for daily use is often unwieldy.
