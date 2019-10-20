@@ -20,9 +20,9 @@ def push(src_path, recv_ssh, recv_path):
     cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path + 
               " | wdt" + options + " -directory " + src_path + " -")
     ### check if gen_macro
-    if gen_macro_flg == False:
+    if gen_macro_flg is False:
         os.system(cmd)
-    elif gen_macro_flg == True:
+    elif gen_macro_flg is True:
         gen_macro(cmd, macro_name)
     else:
         sys.exit('Critical Error Executing the Warp!')
@@ -42,7 +42,7 @@ def fetch(src_ssh, src_path, recv_path):
 ############
 ## Macro Generater
 ########
-gen_macro_flg == False
+gen_macro_flg = False
 def gen_macro(cmd, macro_name):
     os.system("echo '" + cmd + "' > /var/app/warp-cli/macros/" + macro_name)
     sys.exit("Macro Successfully Generated!")
@@ -104,14 +104,17 @@ def build_options():
         options = (num_ports + avg_mbytes + report_interval + overwrite)
     return options
 
-############
-## Master Control Flow
-########
-### Build vars based on user arguments
 if args.gen_macro:
+    if args.ship:
+        sys.exit('Macros for --ship commands are NOT yet supported!')
+    else:
+        gen_macro_flg = True
     global macro_name
     macro_name = args.gen_macro
 
+############
+## Master Control Flow
+########
 if args.fetch:
     src_ssh = (''.join(str(e) for e in args.fetch[:-2]))
     src_path = (''.join(str(e) for e in args.fetch[1:-1]))
@@ -136,14 +139,6 @@ if args.daemon:
     start_recv_daemon(arg.daemon)
     print('Exiting on Success!')
 
-if args.gen_macro:
-    if len(cmd) == 0:
-        sys.exit('No Command to Convert to Macro!')
-    elif args.ship:
-        sys.exit('Macros for --ship commands are NOT yet supported!')
-    else:
-        gen_macro_flg == True
-
 if args.macro:
     if os.path.exists('/var/app/wdt-cli/macros/' + args.macro):
         sys.exit(args.macro + " is not found in /var/app/wdt-cli/macros/")
@@ -153,10 +148,10 @@ if args.macro:
 
 if args.install:
     from setup import setup_warp
-    setup_warp()
+    setup_warp(args.install)
     sys.exit('Install Complete!')
 
 if args.uninstall:
     from setup import uninstall_warp
-    uninstall_warp()
+    uninstall_warp(args.uninstall)
     sys.exit('Uninstall Complete!')
