@@ -1,6 +1,6 @@
 ﻿# Warp-CLI - _ALPHA_
-A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
-*This tool is still under development. Please report any bugs or feature requests*
+A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.\
+*This tool is still under development. Please feel free to submit any bugs or feature requests.*
 
 ![Demo_Gif](https://imgur.com/N5uSgNV.gif)
 
@@ -10,7 +10,7 @@ A CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfe
 While WDT provides several benefits, it requires a lengthy build process making it unsuitable for one time transfers. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains comparatively. Since WDT is designed to fully saturate even the highest-end hardware, it is likely to overwhelm even enterprise networking hardware. Please consider this when transferring more than a 1TB of files.
 
 ## Performance Gains
-Below are timed transfers over my personal home network which is 1 Gigiabit. Each progressive transfer increases the total size of the transfer in GB, while reducing the total number of files being transfered. WDT easily maintains full 1 Gigabit saturation across all 3 transfers while HPN-SFTP struggles to transfer multiple small files but reaches full saturation while transferring large files. With +10 Gigabit networking hardware you can expect to WDT scale to +40 Gigabit and HPN-SSH to scale to around 5 Gigabit. 
+Below are timed transfers(in seconds) over my personal home network which is 1 Gigiabit. Each progressive transfer increases the total size of the transfer in GB, while reducing the total number of files being transfered. WDT easily maintains full 1 Gigabit saturation across all 3 transfers while HPN-SFTP struggles to transfer multiple small files but reaches full saturation while transferring large files. With +10 Gigabit networking hardware you can expect to WDT scale to +40 Gigabit and HPN-SSH to scale to around 5 Gigabit. 
 
 ![Performance Graphs](https://i.imgur.com/GL8dBN2.png)
 
@@ -24,7 +24,7 @@ Warp-CLI shortens this command to:\
  `warp -f ssh.alias /dir/to/fetch/ /dir/to/recv`
 
 ### Macros
-Warp-CLI also includes a powerful macro system for repeating custom transfers with a single command. Macros are pre-formed transfer commands (stored in /var/app/warp-cli/macros) that are invoked with `warp -m macro_name`.
+Warp-CLI also includes a macro system for repeating custom transfers with a single command. Macros are stored transfer commands (kept in /var/app/warp-cli/macros) that are invoked with `warp -m macro_name`.
 
 To generate a macro:\
  `warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -tr 16 -ri 10000 -ow true`
@@ -69,9 +69,10 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
     `warp --uninstall`
 
 ## Setup - _STILL UNDER DEVELOPMENT_
-Since Warp-CLI uses multiple dependencies and configuration files to transfer directories, the script attempts to provide a fully automated installation process for most linux flavors. If your flavor is not supported, please refer to the [manual install documentation,](https://github.com/facebook/wdt/blob/master/build/BUILD.md) Once you install WDT and its dependencies, Warp-CLI will function normally.  
+Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully automated installation process for as many linux flavors as possible. If your flavor is not supported, please refer to the [manual install documentation,](https://github.com/facebook/wdt/blob/master/build/BUILD.md) Once you install WDT and its dependencies, Warp-CLI will function normally.  
 
-*So far, automatic installation is available for Ubuntu 18.xx, Ubuntu 19.xx, Debian 8.x, Debian 9.x, Arch Linux, Fedora 28, Fedora 29, and Fedora 30.*
+*So far, automatic installation is available on:\
+Ubuntu 18.xx, Ubuntu 19.xx, Debian 8.x, Debian 9.x, Arch Linux, Fedora 28, Fedora 29, and Fedora 30.*
 
 ### Automatic Installation
 To install WDT and Warp-CLI automaticly on your machine:
@@ -80,7 +81,7 @@ To install WDT and Warp-CLI automaticly on your machine:
 3. `python3 /var/app/warp-cli/core/warp.py --install /var/app/warp-cli`
 
 ### Uninstall
-Warp-CLI will remove itself from /var/app/ but WDT will remain installed.
+Warp-CLI will remove itself from /var/app/ but WDT will remain installed.\
 `warp --uninstall`
 
 ### OpenSSH

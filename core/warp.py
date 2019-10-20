@@ -8,24 +8,29 @@ import argparse
 ## WDT CLI Wrapper
 ########
 def ship(src_ssh, src_path, recv_ssh, recv_path):
+    options = build_options()
     receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path) 
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
     connection_url = str(receiver_process.stdout.readline().strip())[1:] 
     sender_cmd = (connection_url + " | ssh " + src_ssh + " wdt" + options + " -directory " + src_path + " -")
     subprocess.Popen(sender_cmd, stdout=subprocess.PIPE, shell=True)
-    sys.exit()
 
 def push(src_path, recv_ssh, recv_path):
-    global cmd
+    options = build_options()
     cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path + 
               " | wdt" + options + " -directory " + src_path + " -")
+    ### check if gen_macro
+    if gen_macro_flg == False:
+        os.system(cmd)
+    elif gen_macro_flg == True:
+        gen_macro(cmd, macro_name)
+    else:
+        sys.exit('Critical Error Executing the Warp!')
 
 def fetch(src_ssh, src_path, recv_path):
-    global cmd
+    options = build_options()
     cmd = ("wdt" + options + " -directory " + recv_path + 
               " | ssh " + src_ssh + " wdt" + options + " -directory " + src_path + " -")
-
-def warp(cmd, gen_macro_flg=False, macro_name='default_name'):
     ### check if gen_macro
     if gen_macro_flg == False:
         os.system(cmd)
@@ -37,8 +42,10 @@ def warp(cmd, gen_macro_flg=False, macro_name='default_name'):
 ############
 ## Macro Generater
 ########
+gen_macro_flg == False
 def gen_macro(cmd, macro_name):
     os.system("echo '" + cmd + "' > /var/app/warp-cli/macros/" + macro_name)
+    sys.exit("Macro Successfully Generated!")
 
 def run_macro(macro_name):
     macro_list = ('/var/app/warp-cli/macros/' + macro_name)
@@ -86,19 +93,21 @@ args = parser.parse_args()
 ############
 ## Options
 ########
-num_ports = " -num_ports=" + str(args.threads)
-avg_mbytes = " -avg_mbytes_per_sec=" + str(args.throttle_speed)
-report_interval = " -progress_report_interval_millis=" + str(args.report_interval)
-overwrite = " -overwrite=" + str(args.overwrite)
-if len(args.custom_parms) > 0:
-    options = (num_ports + avg_mbytes + report_interval + overwrite + args.custom_parms)
-else: 
-    options = (num_ports + avg_mbytes + report_interval + overwrite)
+def build_options():
+    num_ports = " -num_ports=" + str(args.threads)
+    avg_mbytes = " -avg_mbytes_per_sec=" + str(args.throttle_speed)
+    report_interval = " -progress_report_interval_millis=" + str(args.report_interval)
+    overwrite = " -overwrite=" + str(args.overwrite)
+    if len(args.custom_parms) > 0:
+        options = (num_ports + avg_mbytes + report_interval + overwrite + args.custom_parms)
+    else: 
+        options = (num_ports + avg_mbytes + report_interval + overwrite)
+    return options
 
 ############
 ## Master Control Flow
 ########
-### Set Vars from Args
+### Build vars based on user arguments
 if args.gen_macro:
     global macro_name
     macro_name = args.gen_macro
@@ -122,10 +131,10 @@ if args.ship:
     recv_path = (''.join(str(e) for e in args.ship[3:]))
     ship(src_ssh, src_path, recv_ssh, recv_path)
 
-### utilities
+### trigger utilities
 if args.daemon:
     start_recv_daemon(arg.daemon)
-    sys.exit('Exiting on Success!')
+    print('Exiting on Success!')
 
 if args.gen_macro:
     if len(cmd) == 0:
@@ -133,15 +142,14 @@ if args.gen_macro:
     elif args.ship:
         sys.exit('Macros for --ship commands are NOT yet supported!')
     else:
-        warp(cmd, gen_macro_flg=True, macro_name=args.gen_macro)
-        sys.exit("Macro Successfully Generated!")
+        gen_macro_flg == True
 
 if args.macro:
     if os.path.exists('/var/app/wdt-cli/macros/' + args.macro):
         sys.exit(args.macro + " is not found in /var/app/wdt-cli/macros/")
     else:
         run_macro(args.macro)
-        sys.exit('Transfer Complete!')
+        print('Transfer Complete!')
 
 if args.install:
     from setup import setup_warp
@@ -152,10 +160,3 @@ if args.uninstall:
     from setup import uninstall_warp
     uninstall_warp()
     sys.exit('Uninstall Complete!')
-
-###  excute final cmd or return --help
-if 'cmd' in locals():
-    warp(cmd)
-else:
-    parser.print_help()
-    sys.exit()
