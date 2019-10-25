@@ -42,7 +42,7 @@ def setup_warp(base_dir, remote_install=False):
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/folly.git')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/wdt.git')
     os.system('mkdir ' + base_dir + '/build/wdt/_build')
-    os.system('cd ' + base_dir + '/build/wdt/_build && cmake ' + base_dir + '/wdt && make -j && sudo make install')
+    os.system('cd ' + base_dir + '/build/wdt/_build && cmake ' + base_dir + '/build/wdt && make -j && sudo make install')
 
 def uninstall_warp(base_dir):
     rm_dir(base_dir, 'r')
