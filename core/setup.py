@@ -30,19 +30,20 @@ def setup_warp(base_dir, remote_install=False):
             sys.exit('Refer to the manual build guide OR don\'t be stupid and use a AUR manager. :P')
 ############# 
     elif re.search(r'(fedora 30|fedora 29|fedora 28)', os_name.lower()):
-        yum('cmake boost-devel openssl jemalloc glog-devel double-conversion-devel make automake gcc gcc-c++ kernel-devel gtest-devel openssl-devel')
+        yum('cmake boost-devel openssl jemalloc glog-devel double-conversion-devel make automake gcc gcc-c++ kernel-devel gtest-devel openssl-devel libevent-devel')
 ############# 
     elif re.search(r'(ubuntu 19|ubuntu 18|debian gnu/linux 9|debian gnu/linux 10)', os_name.lower()):
-        apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev')
+        apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev libevent-dev')
 ############# 
     else:
         sys.exit('Automated package installs for ' + os_name + ' are not supported.')
 
     ## download and build wdt from source
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/folly.git')
+    os.system('cd ' + base_dir + '/build/folly && git checkout "$(git describe --abbrev=0 --always)"')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/wdt.git')
     os.system('mkdir ' + base_dir + '/build/wdt/_build')
-    os.system('cd ' + base_dir + '/build/wdt/_build && cmake ' + base_dir + '/build/wdt && make -j && sudo make install')
+    os.system('cd ' + base_dir + '/build/wdt/_build && cmake -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_BUILD_TYPE=Release ../ make -j && sudo make install')
 
 def uninstall_warp(base_dir):
     rm_dir(base_dir, 'r')
