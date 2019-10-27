@@ -72,7 +72,7 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
 Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully automated installation process for as many linux flavors as possible. If your flavor is not supported, please refer to the [manual install documentation,](https://github.com/facebook/wdt/blob/master/build/BUILD.md) Once you install WDT and its dependencies Warp-CLI will function normally.  
 
 *So far, automatic installation is available on:*\
-*- Ubuntu 19.xx Workstation and Server, Ubuntu 18.xx Workstation and Server, Debian 9.x, Debian 8.x, Arch Linux, Fedora 30 Workstation and Server, Fedora 29 Workstation and Server, Fedora 28 Worstation and Server*
+*Ubuntu 19.xx Workstation and Server, Ubuntu 18.xx Workstation and Server, Debian 9.x, Debian 8.x, Arch Linux, Fedora 30 Workstation and Server, Fedora 29 Workstation and Server, Fedora 28 Worstation and Server*
 
 ### Automatic Installation
 To install WDT and Warp-CLI automaticly on your machine:
