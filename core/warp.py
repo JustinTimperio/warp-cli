@@ -12,7 +12,7 @@ def ship(src_ssh, src_path, recv_ssh, recv_path):
     receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path) 
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
     connection_url = str(receiver_process.stdout.readline().strip())[1:] 
-    sender_cmd = (connection_url + " | ssh " + src_ssh + " wdt" + options + " -directory " + src_path + " -")
+    sender_cmd = ("ssh " + src_ssh + " wdt" + options + "-connection_url=" + connection_url + " -directory " + src_path + " -")
     subprocess.Popen(sender_cmd, stdout=subprocess.PIPE, shell=True)
 
 def push(src_path, recv_ssh, recv_path):
