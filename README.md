@@ -77,7 +77,7 @@ To install WDT and Warp-CLI automaticly on your machine:
 2. `cd /var/app && git clone https://github.com/JustinTimperio/warp-cli.git`
 3. `python3 /var/app/warp-cli/core/warp.py --install /var/app/warp-cli`
 
-*So far, automatic installation is available on:*\
+*So far, automatic installation is available on:*
 - Arch Linux
 - Ubuntu 19.xx Workstation and Server
 - Ubuntu 18.xx Workstation and Server
@@ -89,7 +89,7 @@ To install WDT and Warp-CLI automaticly on your machine:
 
 ### Uninstall
 Warp-CLI will remove itself from /var/app/ but WDT will remain installed.\
-`warp --uninstall`
+`warp --uninstall /var/app/warp-cli`
 
 ### OpenSSH
 Warp uses ssh to securely share connection URLs via a standard Linux pipe. It expects the use of an RSA key, which does not require a user password. While it is possible to use PAM authentication or key passwords, I have not yet added this as a feature.
