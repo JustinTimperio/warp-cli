@@ -35,7 +35,7 @@ def read_list(file_name):
     return list_name
 
 ######
-### Web Crawling and Downloading Fuctions
+### Network and Web Fuctions
 ######
 
 def dl_url(url, file_name):
@@ -70,7 +70,6 @@ def get_local_ip():
 ######
 ### File System Commands and Short-Cuts
 ######
-
 def open_permissions(path):
     os.system("sudo chmod -R 777 " + path)
 
@@ -109,6 +108,10 @@ def cpu_core_count():
     core_count = subprocess.check_output("cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l", shell=True)
     return str(core_count)[2:-3]
 
+def os_distro():
+    os_name = subprocess.check_output('cat /etc/os-release | grep PRETTY_NAME= | cut -c 13-', shell=True)
+    return str(os_name)[2:-3]
+
 ######
 ### Linux System Package Commands
 ######
@@ -129,7 +132,3 @@ def pip_install(packages):
 
 def aurman_install(packages):
     os.system("aurman -S --needed " + packages)
-
-def os_distro():
-    os_name = subprocess.check_output('cat /etc/os-release | grep PRETTY_NAME= | cut -c 13-', shell=True)
-    return str(os_name)[2:-3]

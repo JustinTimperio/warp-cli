@@ -34,6 +34,9 @@ def setup_warp(base_dir, remote_install=False):
     elif re.search(r'(ubuntu 19|ubuntu 18|debian gnu/linux 9|debian gnu/linux 10)', os_name.lower()):
         apt('cmake libjemalloc-dev libgoogle-glog-dev libboost-system-dev libdouble-conversion-dev openssl build-essential libboost-all-dev libssl-dev libgtest-dev libevent-dev')
 ############# 
+    elif re.search(r'(centos linux 7)', os_name.lower()):
+        yum('epel-release')
+        yum('cmake boost-devel openssl jemalloc-devel glog-devel double-conversion-devel make automake gcc gcc-c++ kernel-devel gtest-devel openssl-devel libevent-devel')
     else:
         sys.exit('Automated package installs for ' + os_name + ' are not supported.')
 

@@ -36,11 +36,11 @@ This macro can now be called with:\
 Warp-CLI features a number of shortcuts that attempt to make sending files as trivial and intuitive as possible. Additionally, warp.py can be imported into any python3 script, which provides more granular control over transfers. To see a list of all available options use `wdt --help | less`.
 
 Warp-CLI provides three core transfer modes:
-- '-s, --ship': Send a remote directory to another remote directory.\
+- -s, --ship: Send a remote directory to another remote directory.\
     `warp -s source_ssh /dir/to/send dest_ssh /dir/to/receive`  
-- '-f, --fetch': Pull a remote directory to a local directory.\
+- -f, --fetch: Pull a remote directory to a local directory.\
     `warp -f source_ssh /dir/to/fetch /dir/to/receive`
-- '-p, --push': Send a local directory to a remote directory.\
+- -p, --push: Send a local directory to a remote directory.\
     `warp -p /dir/to/push dest_ssh /dir/to/receive`
 
 ### Flags
@@ -55,17 +55,17 @@ To provide optimal performance, Warp-CLI throttles transfers to ~90% the capacit
 ### Utilities
 Warp-CLI provides a number of utilities to streamline the daily use of WTD when sending files in high frequency.
 
-- '-m, --macro': Execute a custom macro from /var/app/warp-cli/config/ by name.\
+- -m, --macro: Execute a custom macro from /var/app/warp-cli/config/ by name.\
     `warp -m macro_name`
-- '-gm, --gen_macro': Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
+- -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
     `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow true`
-- '-cp, --custom_parms': Inject any additional parameters available from `wdt --help`.\
+- -cp, --custom_parms: Inject any additional parameters available from `wdt --help`.\
     `warp -f /dir/to/receive source_ssh /dir/to/send -c '-skip_writes=true -start_port=12345'`
-- '-d, --daemon': Start a permanent receiver daemon on a local directory and export a file containing the connection URL and meta-data.\
+- -d, --daemon: Start a permanent receiver daemon on a local directory and export a file containing the connection URL and meta-data.\
     `warp --daemon /dir/to/receive`
-- '-i, --install': Attempt to install WDT and dependencies.\
+- -i, --install: Attempt to install WDT and dependencies.\
     `warp -i /var/app/warp-cli`
-- '-rm, --uninstall': Uninstall Warp-CLI and config files.\
+- -rm, --uninstall: Uninstall Warp-CLI and config files.\
     `warp --uninstall`
 
 ## Setup - _STILL UNDER DEVELOPMENT_
@@ -77,15 +77,12 @@ To install WDT and Warp-CLI automaticly on your machine:
 2. `cd /var/app && git clone https://github.com/JustinTimperio/warp-cli.git`
 3. `python3 /var/app/warp-cli/core/warp.py --install /var/app/warp-cli`
 
-*So far, automatic installation is available on:*
+So far, automatic installation is available on:
 - Arch Linux
-- Ubuntu 19.xx Workstation and Server
-- Ubuntu 18.xx Workstation and Server
-- Debian 10.x
-- Debian 9.x
-- Fedora 30 Workstation and Server
-- Fedora 29 Workstation and Server
-- Fedora 28 Worstation and Server
+- Ubuntu 19.xx and 18.xx Workstation and Server
+- Debian 10.x and 9.x
+- Fedora 30, 29 and 28 Workstation and Server
+- CentOS 7.x
 
 ### Uninstall
 Warp-CLI will remove itself from /var/app/ but WDT will remain installed.\
