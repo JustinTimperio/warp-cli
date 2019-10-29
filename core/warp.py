@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 #### WDT Wrapper for Uni-Cast - https://github.com/facebook/wdt
-## Version 1.5
-from global_defuns import * 
+## Version 1.6
+from global_defuns import *
 import argparse
 
 ############
@@ -9,86 +9,35 @@ import argparse
 ########
 def ship(src_ssh, src_path, recv_ssh, recv_path):
     options = build_options()
-    receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path) 
+    receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
-    connection_url = str(receiver_process.stdout.readline().strip())[1:] 
+    connection_url = str(receiver_process.stdout.readline().strip())[1:]
     sender_cmd = ("ssh " + src_ssh + " wdt" + options + "-connection_url=" + connection_url + " -directory " + src_path + " -")
     subprocess.Popen(sender_cmd, stdout=subprocess.PIPE, shell=True)
 
 def push(src_path, recv_ssh, recv_path):
     options = build_options()
-    cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path + 
+    cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path +
               " | wdt" + options + " -directory " + src_path + " -")
     ### check if gen_macro
     if gen_macro_flg is False:
         os.system(cmd)
     elif gen_macro_flg is True:
-        gen_macro(cmd, macro_name)
+        gen_macro(cmd, args.gen_macro)
     else:
         sys.exit('Critical Error Executing the Warp!')
 
 def fetch(src_ssh, src_path, recv_path):
     options = build_options()
-    cmd = ("wdt" + options + " -directory " + recv_path + 
+    cmd = ("wdt" + options + " -directory " + recv_path +
               " | ssh " + src_ssh + " wdt" + options + " -directory " + src_path + " -")
     ### check if gen_macro
     if gen_macro_flg == False:
         os.system(cmd)
     elif gen_macro_flg == True:
-        gen_macro(cmd, macro_name)
+        gen_macro(cmd, args.gen_macro)
     else:
         sys.exit('Critical Error Executing the Warp!')
-
-############
-## Macro Generater
-########
-gen_macro_flg = False
-def gen_macro(cmd, macro_name):
-    os.system("echo '" + cmd + "' > /var/app/warp-cli/macros/" + macro_name)
-    sys.exit("Macro Successfully Generated!")
-
-def run_macro(macro_name):
-    macro_list = ('/var/app/warp-cli/macros/' + macro_name)
-    os.system('cat ' + macro_list + " | bash")
-
-############
-## Start WDT Daemon
-########
-def start_recv_daemon(recv_path='/var/app/warp-cli/inbound'):
-    import getpass, datetime
-    receiver_cmd = ("wdt -run_as_daemon -overwrite true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
-    receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
-    ## start daemon and return connection url
-    connection_url = str(receiver_process.stdout.readline().strip())[1:] 
-    ## generate a connection file containing meta data about the daemon 
-    meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    connection_file = [meta_data, connection_url]
-    export_path = ("/var/app/wdt/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
-    touch(export_path, 'u')
-    export_list(export_path, connection_file)
-    return export_path
-
-############
-## Argument Parser
-########
-parser = argparse.ArgumentParser(description="A simple wrapper for the WDT CLI Tool.")
-parser.add_argument("-s", "--ship", nargs=4, metavar=('SRC_SSH_ALIAS','SRC_PATH','RECV_SSH_ALIAS','RECV_SSH_ALIAS'), help="Warp a remote directory to another remote directory.")
-parser.add_argument("-p", "--push", nargs=3, metavar=('SRC_PATH','RECV_SSH_ALIAS','RECV_PATH'), help="Warp a local directory to a remote directory.")
-parser.add_argument("-f", "--fetch", nargs=3, metavar=('SRC_SSH_ALIAS','SRC_PATH','RECV_PATH'), help="Warp a remote directory to a local directory.")
-### optional arguments 
-parser.add_argument("-tr", "--threads", default="8", metavar='INT', help="Set the number of threads/ports for WDT to use.") 
-parser.add_argument("-ri", "--report_interval", default="3000", metavar='INT', help="Update interval in milliseconds for transfer report updates.")
-parser.add_argument("-ts", "--throttle_speed", default="110", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
-parser.add_argument("-ow", "--overwrite", default="false", metavar='BOOL', help="Allow the receiver to overwrite existing files in a directory.")
-parser.add_argument("-cp", "--custom_parms", nargs='*', default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.") 
-### utilities
-parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to /var/app/wdt.")
-parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from /var/app/warp-cli/macros.")
-parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
-parser.add_argument("-in", "--install", metavar='/DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies.")
-parser.add_argument("-rm", "--uninstall", metavar='/DIR/TO/UNINSTALL', help="Remove Warp-CLI and config files.")
-###
-args = parser.parse_args()
 
 ############
 ## Options
@@ -100,51 +49,89 @@ def build_options():
     overwrite = " -overwrite=" + str(args.overwrite)
     if len(args.custom_parms) > 0:
         options = (num_ports + avg_mbytes + report_interval + overwrite + args.custom_parms)
-    else: 
+    else:
         options = (num_ports + avg_mbytes + report_interval + overwrite)
     return options
 
+############
+## Macro Generator
+########
+gen_macro_flg = False
+def gen_macro(cmd, macro_name):
+    os.system("echo '" + cmd + "' > /var/app/warp-cli/macros/" + macro_name)
+    print("Macro Successfully Generated!")
+
+def run_macro(macro_name):
+    macro_path = ('/var/app/warp-cli/macros/' + macro_name)
+    os.system('cat ' + macro_path + " | bash")
+    print('Transfer Complete!')
+
+############
+## Start WDT Daemon
+########
+def start_recv_daemon(recv_path='/var/app/warp-cli/inbound'):
+    import getpass, datetime
+    receiver_cmd = ("wdt -run_as_daemon -overwrite true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
+    receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
+    ## start daemon and return connection url
+    connection_url = str(receiver_process.stdout.readline().strip())[1:]
+    ## generate a connection file containing meta data about the daemon
+    meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    connection_file = [meta_data, connection_url]
+    export_path = ("/var/app/wdt/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
+    touch(export_path, 'u')
+    export_list(export_path, connection_file)
+    print(meta_data)
+    return export_path
+
+############
+## Argument Parser
+########
+parser = argparse.ArgumentParser(description="A simple wrapper for the WDT CLI Tool.")
+parser.add_argument("-s", "--ship", nargs=4, metavar=('SRC_SSH_ALIAS','SRC_PATH','RECV_SSH_ALIAS','RECV_SSH_ALIAS'), help="Warp a remote directory to another remote directory.")
+parser.add_argument("-p", "--push", nargs=3, metavar=('SRC_PATH','RECV_SSH_ALIAS','RECV_PATH'), help="Warp a local directory to a remote directory.")
+parser.add_argument("-f", "--fetch", nargs=3, metavar=('SRC_SSH_ALIAS','SRC_PATH','RECV_PATH'), help="Warp a remote directory to a local directory.")
+### optional arguments
+parser.add_argument("-tr", "--threads", default="8", metavar='INT', help="Set the number of threads/ports for WDT to use.")
+parser.add_argument("-ri", "--report_interval", default="3000", metavar='INT', help="Update interval in milliseconds for transfer report updates.")
+parser.add_argument("-ts", "--throttle_speed", default="110", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
+parser.add_argument("-ow", "--overwrite", default="false", metavar='BOOL', help="Allow the receiver to overwrite existing files in a directory.")
+parser.add_argument("-cp", "--custom_parms", nargs='*', default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.")
+### utilities
+parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to /var/app/wdt.")
+parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from /var/app/warp-cli/macros.")
+parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
+parser.add_argument("-in", "--install", metavar='/DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies.")
+parser.add_argument("-rm", "--uninstall", metavar='/DIR/TO/UNINSTALL', help="Remove Warp-CLI and config files.")
+
+############
+## Trigger Core Args
+args = parser.parse_args()
+########
 if args.gen_macro:
     if args.ship:
         sys.exit('Macros for --ship commands are NOT yet supported!')
     else:
         gen_macro_flg = True
-    global macro_name
-    macro_name = args.gen_macro
 
-############
-## Master Control Flow
-########
 if args.fetch:
-    src_ssh = (''.join(str(e) for e in args.fetch[:-2]))
-    src_path = (''.join(str(e) for e in args.fetch[1:-1]))
-    recv_path = (''.join(str(e) for e in args.fetch[2:]))
-    fetch(src_ssh, src_path, recv_path)
+    fetch(''.join(args.fetch[:-2]), ''.join(args.fetch[1:-1]),''.join(args.fetch[2:]))
 
 if args.push:
-    src_path = (''.join(str(e) for e in args.push[:-2]))
-    recv_ssh = (''.join(str(e) for e in args.push[1:-1]))
-    recv_path = (''.join(str(e) for e in args.push[2:]))
-    push(src_path, recv_ssh, recv_path)
+    push(''.join(args.push[:-2]), ''.join(args.push[1:-1]), ''.join(args.push[2:]))
 
 if args.ship:
-    src_ssh = (''.join(str(e) for e in args.ship[:-3]))
-    src_path = (''.join(str(e) for e in args.ship[1:-2]))
-    recv_ssh = (''.join(str(e) for e in args.ship[2:-1]))
-    recv_path = (''.join(str(e) for e in args.ship[3:]))
-    ship(src_ssh, src_path, recv_ssh, recv_path)
+    ship(''.join(args.ship[:-3]), ''.join(args.ship[1:-2]), ''.join(args.ship[2:-1]), ''.join(args.ship[3:]))
 
 ### trigger utilities
 if args.daemon:
     start_recv_daemon(arg.daemon)
-    print('Exiting on Success!')
 
 if args.macro:
     if os.path.exists('/var/app/wdt-cli/macros/' + args.macro):
         sys.exit(args.macro + " is not found in /var/app/wdt-cli/macros/")
     else:
         run_macro(args.macro)
-        print('Transfer Complete!')
 
 if args.install:
     from setup import setup_warp
