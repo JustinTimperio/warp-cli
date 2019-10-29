@@ -82,7 +82,10 @@ So far, automatic installation is available on:
 - Ubuntu 19.xx and 18.xx Workstation and Server
 - Debian 10.x and 9.x
 - Fedora 30, 29 and 28 Workstation and Server
-- CentOS 7.x
+
+WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
+- CentOS 7
+- Debian 8
 
 ### Uninstall
 Warp-CLI will remove itself from /var/app/ but WDT will remain installed.\
