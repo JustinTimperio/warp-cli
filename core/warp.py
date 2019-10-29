@@ -1,22 +1,20 @@
 #! /usr/bin/python3
 #### WDT Wrapper for Uni-Cast - https://github.com/facebook/wdt
-## Version 1.6
+## Version 1.7
 from global_defuns import *
 import argparse
 
 ############
 ## WDT CLI Wrapper
 ########
-def ship(src_ssh, src_path, recv_ssh, recv_path):
-    options = build_options()
+def ship(src_ssh, src_path, recv_ssh, recv_path, options):
     receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
     connection_url = str(receiver_process.stdout.readline().strip())[1:]
     sender_cmd = ("ssh " + src_ssh + " wdt" + options + "-connection_url=" + connection_url + " -directory " + src_path + " -")
     subprocess.Popen(sender_cmd, stdout=subprocess.PIPE, shell=True)
 
-def push(src_path, recv_ssh, recv_path):
-    options = build_options()
+def push(src_path, recv_ssh, recv_path, options):
     cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path +
               " | wdt" + options + " -directory " + src_path + " -")
     ### check if gen_macro
@@ -27,8 +25,7 @@ def push(src_path, recv_ssh, recv_path):
     else:
         sys.exit('Critical Error Executing the Warp!')
 
-def fetch(src_ssh, src_path, recv_path):
-    options = build_options()
+def fetch(src_ssh, src_path, recv_path, options):
     cmd = ("wdt" + options + " -directory " + recv_path +
               " | ssh " + src_ssh + " wdt" + options + " -directory " + src_path + " -")
     ### check if gen_macro
@@ -42,12 +39,12 @@ def fetch(src_ssh, src_path, recv_path):
 ############
 ## Options
 ########
-def build_options():
+def build_options(ports, mbytes, interval, overwrite, custom_parms):
     num_ports = " -num_ports=" + str(args.threads)
     avg_mbytes = " -avg_mbytes_per_sec=" + str(args.throttle_speed)
     report_interval = " -progress_report_interval_millis=" + str(args.report_interval)
     overwrite = " -overwrite=" + str(args.overwrite)
-    options = (num_ports + avg_mbytes + report_interval + overwrite + args.custom_parms)
+    options = (num_ports + avg_mbytes + report_interval + overwrite + custom_parms)
     return options
 
 ############
@@ -68,15 +65,14 @@ def run_macro(macro_name):
 ########
 def start_recv_daemon(recv_path='/var/app/warp-cli/inbound'):
     import getpass, datetime
-    receiver_cmd = ("wdt -run_as_daemon -overwrite true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
+    receiver_cmd = ("wdt -run_as_daemon=true -overwrite=true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
-    ## start daemon and return connection url
     connection_url = str(receiver_process.stdout.readline().strip())[1:]
     ## generate a connection file containing meta data about the daemon
     meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     connection_file = [meta_data, connection_url]
     export_path = ("/var/app/wdt/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
-    touch(export_path, 'u')
+    os.system('cat > ' + export_path)
     export_list(export_path, connection_file)
     print(meta_data)
     return export_path
@@ -112,13 +108,16 @@ if args.gen_macro:
         gen_macro_flg = True
 
 if args.fetch:
-    fetch(''.join(args.fetch[:-2]), ''.join(args.fetch[1:-1]),''.join(args.fetch[2:]))
+    fetch(''.join(args.fetch[:-2]), ''.join(args.fetch[1:-1]),''.join(args.fetch[2:]),
+          build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
 
 if args.push:
-    push(''.join(args.push[:-2]), ''.join(args.push[1:-1]), ''.join(args.push[2:]))
+    push(''.join(args.push[:-2]), ''.join(args.push[1:-1]), ''.join(args.push[2:]),
+          build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
 
 if args.ship:
-    ship(''.join(args.ship[:-3]), ''.join(args.ship[1:-2]), ''.join(args.ship[2:-1]), ''.join(args.ship[3:]))
+    ship(''.join(args.ship[:-3]), ''.join(args.ship[1:-2]), ''.join(args.ship[2:-1]), ''.join(args.ship[3:]),
+          build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
 
 ### trigger utilities
 if args.daemon:
