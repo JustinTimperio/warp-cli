@@ -47,10 +47,7 @@ def build_options():
     avg_mbytes = " -avg_mbytes_per_sec=" + str(args.throttle_speed)
     report_interval = " -progress_report_interval_millis=" + str(args.report_interval)
     overwrite = " -overwrite=" + str(args.overwrite)
-    if len(args.custom_parms) > 0:
-        options = (num_ports + avg_mbytes + report_interval + overwrite + args.custom_parms)
-    else:
-        options = (num_ports + avg_mbytes + report_interval + overwrite)
+    options = (num_ports + avg_mbytes + report_interval + overwrite + args.custom_parms)
     return options
 
 ############
@@ -106,8 +103,8 @@ parser.add_argument("-rm", "--uninstall", metavar='/DIR/TO/UNINSTALL', help="Rem
 
 ############
 ## Trigger Core Args
-args = parser.parse_args()
 ########
+args = parser.parse_args()
 if args.gen_macro:
     if args.ship:
         sys.exit('Macros for --ship commands are NOT yet supported!')
