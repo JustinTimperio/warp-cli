@@ -10,9 +10,10 @@ def setup_warp(base_dir, remote_install=False):
     if remote_install == False:
         ## setup dirs
         mkdir('/var/app', 'r')
-        mkdir(base_dir, 'r')
-        mkdir(base_dir + '/pool', 'r')
-        mkdir(base_dir + '/macros', 'r')
+        open_permissions(base_dir)
+        mkdir(base_dir, 'u')
+        mkdir(base_dir + '/pool', 'u')
+        mkdir(base_dir + '/macros', 'u')
         open_permissions(base_dir)
         ## link warp to warp.py
         os.system('sudo ln -s ' + base_dir + '/core/warp.py /usr/bin/warp') 
