@@ -9,10 +9,10 @@ from global_defuns import *
 def setup_warp(base_dir, remote_install=False):
     if remote_install == False:
         ## setup dirs
-        mkdir('/var/app', 'r')
-        mkdir(base_dir, 'r')
-        mkdir(base_dir + '/pool', 'r')
-        mkdir(base_dir + '/macros', 'r')
+        mkdir(base_dir, 'u')
+        mkdir(base_dir + '/pool', 'u')
+        mkdir(base_dir + '/macros', 'u')
+        mkdir(base_dir + '/build', 'u')
         open_permissions(base_dir)
         ## link warp to warp.py
         os.system('sudo ln -s ' + base_dir + '/core/warp.py /usr/bin/warp') 
@@ -38,11 +38,11 @@ def setup_warp(base_dir, remote_install=False):
         sys.exit('Automated package installs for ' + os_name + ' are not supported.')
 
     ## download and build wdt from source
-    mkdir(base_dir + '/build', 'r')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/folly.git')
-    os.system('cd ' + base_dir + '/build/folly && git checkout "$(git describe --abbrev=0 --always)"')
+    #  os.system('cd ' + base_dir + '/build/folly && git checkout "$(git describe --abbrev=0 --always)"')
+    os.system('cd ' + base_dir + '/build/folly && git checkout v2019.09.02.00')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/wdt.git')
-    os.system('mkdir ' + base_dir + '/build/wdt/_build')
+    mkdir(base_dir + '/build/wdt/_build', 'u')
     os.system('cd ' + base_dir + '/build/wdt/_build && cmake -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_BUILD_TYPE=Release ../ && make -j && sudo make install')
 
 def uninstall_warp(base_dir):
