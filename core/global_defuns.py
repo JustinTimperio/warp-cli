@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 ###### Useful Defs for Python3 Projects
 #### Version - 1.5
 
