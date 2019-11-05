@@ -1,5 +1,5 @@
-#! /usr/bin/python3
-#### WDT Wrapper for Uni-Cast - https://github.com/facebook/wdt
+#! /usr/bin/python
+#### WDT Wrapper for WDT - https://github.com/facebook/wdt
 ## Version 1.7
 from global_defuns import *
 import argparse
@@ -52,18 +52,18 @@ def build_options(ports, mbytes, interval, overwrite, custom_parms):
 ########
 gen_macro_flg = False
 def gen_macro(cmd, macro_name):
-    os.system("echo '" + cmd + "' > /var/app/warp-cli/macros/" + macro_name)
+    os.system("echo '" + cmd + "' > " + os.getcwd() + "/macros/" + macro_name)
     print("Macro Successfully Generated!")
 
 def run_macro(macro_name):
-    macro_path = ('/var/app/warp-cli/macros/' + macro_name)
+    macro_path = (os.getcwd() + '/macros/' + macro_name)
     os.system('cat ' + macro_path + " | bash")
     print('Transfer Complete!')
 
 ############
 ## Start WDT Daemon
 ########
-def start_recv_daemon(recv_path='/var/app/warp-cli/inbound'):
+def start_recv_daemon(recv_path=os.getcwd()+'/inbound'):
     import getpass, datetime
     receiver_cmd = ("wdt -run_as_daemon=true -overwrite=true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
@@ -71,7 +71,7 @@ def start_recv_daemon(recv_path='/var/app/warp-cli/inbound'):
     ## generate a connection file containing meta data about the daemon
     meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     connection_file = [meta_data, connection_url]
-    export_path = ("/var/app/wdt/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
+    export_path = (os.getcwd + "/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
     os.system('cat > ' + export_path)
     export_list(export_path, connection_file)
     print(meta_data)
@@ -91,8 +91,8 @@ parser.add_argument("-ts", "--throttle_speed", default="110", metavar='INT', hel
 parser.add_argument("-ow", "--overwrite", default="false", metavar='BOOL', help="Allow the receiver to overwrite existing files in a directory.")
 parser.add_argument("-cp", "--custom_parms", nargs='*', default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.")
 ### utilities
-parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to /var/app/wdt.")
-parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from /var/app/warp-cli/macros.")
+parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to ~/warp-cli/macros.")
+parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from ~/warp-cli/macros.")
 parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
 parser.add_argument("-in", "--install", metavar='/DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies.")
 parser.add_argument("-rm", "--uninstall", metavar='/DIR/TO/UNINSTALL', help="Remove Warp-CLI and config files.")
@@ -124,8 +124,8 @@ if args.daemon:
     start_recv_daemon(arg.daemon)
 
 if args.macro:
-    if os.path.exists('/var/app/wdt-cli/macros/' + args.macro):
-        sys.exit(args.macro + " is not found in /var/app/wdt-cli/macros/")
+    if os.path.exists(os.getcwd() + '/macros/' + args.macro):
+        sys.exit(args.macro + " is not found in " + os.getcwd() + "/macros/")
     else:
         run_macro(args.macro)
 

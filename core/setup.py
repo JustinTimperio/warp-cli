@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python
 #### WDT Wrapper for Uni-Cast - https://github.com/facebook/wdt
 ## Version 1.5
 from global_defuns import * 
