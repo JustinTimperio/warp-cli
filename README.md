@@ -1,5 +1,5 @@
-﻿# Warp-CLI - _ALPHA v2.0_
-TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.\
+﻿# Warp-CLI - _Alpha v2.0_
+TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
 
 ## Abstract
 [WDT](https://github.com/facebook/wdt) is designed to provide the highest possible speed when transferring files(to be only hardware and network limited). WDT provides many advantages over most file transfer protocols including: native concurrency, end-to-end encryption, IPV6 support, and the ability to easily achieve +40Gbit speeds when supported. Unlike most file transfer solutions (Except [NORM](https://www.nrl.navy.mil/itd/ncs/products/norm)) WDT provides a native parallel solution for transferring files by separating files into chunks then queuing them across an arbitrary number of threads and TCP connections. In most cases, file transfer times are dramatically reduced compared to traditional methods like FTP or HTTP.
@@ -53,21 +53,23 @@ This macro can now be called with:\
 ### Utilities
 Warp-CLI provides a number of utilities to streamline the daily use of WTD when sending files in high frequency.
 
+- -cp, --custom_parms: Inject any additional parameters available from `wdt --help`.\
+    `warp -f /dir/to/receive source_ssh /dir/to/send -c '-skip_writes=true -start_port=12345'`
 - -m, --macro: Execute a custom macro from /var/app/warp-cli/config/ by name.\
     `warp -m macro_name`
 - -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
     `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow true`
-- -cp, --custom_parms: Inject any additional parameters available from `wdt --help`.\
-    `warp -f /dir/to/receive source_ssh /dir/to/send -c '-skip_writes=true -start_port=12345'`
 - -d, --daemon: Start a permanent receiver daemon on a local directory and export a file containing the connection URL and meta-data.\
     `warp --daemon /dir/to/receive`
 - -i, --install: Attempt to install WDT and dependencies.\
-    `warp -i /var/app/warp-cli`
+    `warp --install`
+- -ri, --remote_install: Attempt to install WDT and dependencies on a remote machine.\
+    `warp -ri ssh.alias /dir/to/install`
 - -rm, --uninstall: Uninstall Warp-CLI and config files.\
     `warp --uninstall`
 
 ## Setup - _STILL UNDER DEVELOPMENT_
-Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully automated installation process for as many linux flavors as possible. If your flavor is not supported, please refer to the [manual install documentation,](https://github.com/facebook/wdt/blob/master/build/BUILD.md) Once you install WDT and its dependencies Warp-CLI will function normally.  
+Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully automated installation process for as many linux flavors as possible. If your flavor is not supported, please refer to the [manual install documentation](https://github.com/facebook/wdt/blob/master/build/BUILD.md). Once you install WDT and its dependencies Warp-CLI will function normally.  
 
 ### Automatic Installation
 To install WDT and Warp-CLI automatically on your machine:

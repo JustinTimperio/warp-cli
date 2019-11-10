@@ -42,7 +42,7 @@ def build_wdt(base_dir):
 ########
 def setup_warp():
     ## setup warp-cli dirs
-    base_dir = os.getcwd[:-5]
+    base_dir = os.getcwd()[:-5]
     mkdir(base_dir + '/pool', 'u')
     mkdir(base_dir + '/macros', 'u')
     open_permissions(base_dir)
