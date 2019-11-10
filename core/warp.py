@@ -1,6 +1,6 @@
 #! /usr/bin/python
 #### WDT Wrapper for WDT - https://github.com/facebook/wdt
-## Version 1.7
+## Version 2.0
 from global_defuns import *
 import argparse
 
@@ -52,18 +52,18 @@ def build_options(ports, mbytes, interval, overwrite, custom_parms):
 ########
 gen_macro_flg = False
 def gen_macro(cmd, macro_name):
-    os.system("echo '" + cmd + "' > " + os.getcwd() + "/macros/" + macro_name)
+    os.system("echo '" + cmd + "' > " + os.getcwd()[:-5] + "/macros/" + macro_name)
     print("Macro Successfully Generated!")
 
 def run_macro(macro_name):
-    macro_path = (os.getcwd() + '/macros/' + macro_name)
+    macro_path = (os.getcwd()[:-5] + '/macros/' + macro_name)
     os.system('cat ' + macro_path + " | bash")
     print('Transfer Complete!')
 
 ############
 ## Start WDT Daemon
 ########
-def start_recv_daemon(recv_path=os.getcwd()+'/inbound'):
+def start_recv_daemon(recv_path=os.getcwd()[:-5]+'/inbound'):
     import getpass, datetime
     receiver_cmd = ("wdt -run_as_daemon=true -overwrite=true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
@@ -71,7 +71,7 @@ def start_recv_daemon(recv_path=os.getcwd()+'/inbound'):
     ## generate a connection file containing meta data about the daemon
     meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     connection_file = [meta_data, connection_url]
-    export_path = (os.getcwd + "/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
+    export_path = (os.getcwd()[:-5] + "/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
     os.system('cat > ' + export_path)
     export_list(export_path, connection_file)
     print(meta_data)
@@ -89,12 +89,13 @@ parser.add_argument("-tr", "--threads", default="8", metavar='INT', help="Set th
 parser.add_argument("-ri", "--report_interval", default="3000", metavar='INT', help="Update interval in milliseconds for transfer report updates.")
 parser.add_argument("-ts", "--throttle_speed", default="110", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
 parser.add_argument("-ow", "--overwrite", default="false", metavar='BOOL', help="Allow the receiver to overwrite existing files in a directory.")
-parser.add_argument("-cp", "--custom_parms", nargs='*', default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.")
+parser.add_argument("-cp", "--custom_parms", default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.")
 ### utilities
 parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to ~/warp-cli/macros.")
 parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from ~/warp-cli/macros.")
 parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
-parser.add_argument("-in", "--install", metavar='/DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies.")
+parser.add_argument("-in", "--install", action='store_true', help="Attempt an automated install of WDT and dependencies.")
+parser.add_argument("-ir", "--install_remote", nargs=2, metavar='SSH.ALIAS /DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies on a remote machine.")
 parser.add_argument("-rm", "--uninstall", metavar='/DIR/TO/UNINSTALL', help="Remove Warp-CLI and config files.")
 
 ############
@@ -124,17 +125,22 @@ if args.daemon:
     start_recv_daemon(arg.daemon)
 
 if args.macro:
-    if os.path.exists(os.getcwd() + '/macros/' + args.macro):
-        sys.exit(args.macro + " is not found in " + os.getcwd() + "/macros/")
+    if os.path.exists(os.getcwd()[:-5] + '/macros/' + args.macro):
+        sys.exit(args.macro + " is not found in " + os.getcwd()[:-5] + "/macros/")
     else:
         run_macro(args.macro)
 
-if args.install:
-    from setup import setup_warp
-    setup_warp(args.install)
-    sys.exit('Install Complete!')
+if args.install == True:
+    from setup import *
+    setup_warp()
+    sys.exit('Local Install Attempt Complete!')
+
+if args.install_remote:
+    from setup import *
+    setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:]))
+    sys.exit('Remote Install Attempt Complete!')
 
 if args.uninstall:
-    from setup import uninstall_warp
+    from setup import *
     uninstall_warp(args.uninstall)
-    sys.exit('Uninstall Complete!')
+    sys.exit('Uninstall Attempt Complete!')
