@@ -3,6 +3,7 @@
 ## Version 2.0
 from global_defuns import *
 import argparse
+base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
 
 ############
 ## WDT CLI Wrapper
@@ -52,18 +53,18 @@ def build_options(ports, mbytes, interval, overwrite, custom_parms):
 ########
 gen_macro_flg = False
 def gen_macro(cmd, macro_name):
-    os.system("echo '" + cmd + "' > " + os.getcwd()[:-5] + "/macros/" + macro_name)
+    os.system("echo '" + cmd + "' > " + base_dir + "/macros/" + macro_name)
     print("Macro Successfully Generated!")
 
 def run_macro(macro_name):
-    macro_path = (os.getcwd()[:-5] + '/macros/' + macro_name)
+    macro_path = (base_dir + '/macros/' + macro_name)
     os.system('cat ' + macro_path + " | bash")
     print('Transfer Complete!')
 
 ############
 ## Start WDT Daemon
 ########
-def start_recv_daemon(recv_path=os.getcwd()[:-5]+'/inbound'):
+def start_recv_daemon(recv_path=base_dir+'/inbound'):
     import getpass, datetime
     receiver_cmd = ("wdt -run_as_daemon=true -overwrite=true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
@@ -71,7 +72,7 @@ def start_recv_daemon(recv_path=os.getcwd()[:-5]+'/inbound'):
     ## generate a connection file containing meta data about the daemon
     meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     connection_file = [meta_data, connection_url]
-    export_path = (os.getcwd()[:-5] + "/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
+    export_path = (base_dir + "/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
     os.system('cat > ' + export_path)
     export_list(export_path, connection_file)
     print(meta_data)
@@ -125,8 +126,8 @@ if args.daemon:
     start_recv_daemon(arg.daemon)
 
 if args.macro:
-    if os.path.exists(os.getcwd()[:-5] + '/macros/' + args.macro):
-        sys.exit(args.macro + " is not found in " + os.getcwd()[:-5] + "/macros/")
+    if os.path.exists(base_dir + '/macros/' + args.macro):
+        sys.exit(args.macro + " is not found in " + base_dir + "/macros/")
     else:
         run_macro(args.macro)
 
