@@ -1,0 +1,3 @@
+[submodule "python-scripts"]
+	path = python-scripts
+	url = https://github.com/JustinTimperio/python-scripts.git

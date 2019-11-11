@@ -1,9 +1,9 @@
 #! /usr/bin/python
 #### WDT Wrapper for WDT - https://github.com/facebook/wdt
 ## Version 2.0
-from global_defuns import *
+from python_scripts.ps_defuns import *
+from python_scripts.ps_linux import *
 import argparse
-base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
 
 ############
 ## WDT CLI Wrapper
@@ -101,7 +101,9 @@ parser.add_argument("-rm", "--uninstall", action='store_true', help="Remove Warp
 ############
 ## Trigger Core Args
 ########
+base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
 args = parser.parse_args()
+
 if args.gen_macro:
     if args.ship:
         sys.exit('Macros for --ship commands are NOT yet supported!')
@@ -133,12 +135,12 @@ if args.macro:
 if args.install == True:
     from setup import *
     setup_warp()
-    sys.exit('Local Install Attempt Complete!')
+    sys.exit('Install Attempt Complete!')
 
 if args.install_remote:
     from setup import *
     setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:]))
-    sys.exit('Remote Install Attempt Complete!')
 
 if args.uninstall == True:
     from setup import *
+    uninstall_warp(base_dir)

@@ -1,7 +1,8 @@
 #! /usr/bin/python
 #### WDT Wrapper for Uni-Cast - https://github.com/facebook/wdt
 ## Version 2.0
-from global_defuns import *
+from python_scripts.ps_defuns import *
+from python_scripts.ps_linux import *
 
 ############
 ## Setup WDT
@@ -51,10 +52,10 @@ def setup_warp():
     build_wdt(base_dir)
 
 def setup_warp_remote(ssh_alias, base_dir):
-    ## tunnel to a remote machine and install warp-cli minimal
+    ## tunnel to a remote machine and install warp-cli
     git_clone = ' "cd ' + base_dir + ' && git clone https://github.com/JustinTimperio/warp-cli.git &&'
     build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install"' 
-    os.system('ssh ' + ssh_alias + git_clone + " cd warp-cli && git checkout development" + build)
+    os.system('ssh ' + ssh_alias + git_clone + ' cd warp-cli && git checkout development &&' + build)
 
 def uninstall_warp(base_dir):
     rm_dir(base_dir, 'r')
