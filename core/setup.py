@@ -52,9 +52,9 @@ def setup_warp():
 
 def setup_warp_remote(ssh_alias, base_dir):
     ## tunnel to a remote machine and install warp-cli minimal
-    git_clone = ' cd ' + base_dir + ' && git clone https://github.com/JustinTimperio/warp-cli.git &&'
-    build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install' 
-    os.system('ssh ' + ssh_alias + git_clone + build)
+    git_clone = ' "cd ' + base_dir + ' && git clone https://github.com/JustinTimperio/warp-cli.git &&'
+    build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install"' 
+    os.system('ssh ' + ssh_alias + git_clone + " cd warp-cli && git checkout development" + build)
 
 def uninstall_warp(base_dir):
     rm_dir(base_dir, 'r')

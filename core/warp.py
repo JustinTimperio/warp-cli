@@ -142,5 +142,3 @@ if args.install_remote:
 
 if args.uninstall == True:
     from setup import *
-    uninstall_warp(base_dir)
-    sys.exit('Uninstall Attempt Complete!')
