@@ -4,3 +4,6 @@
 [submodule "python_scripts"]
 	path = python_scripts
 	url = https://github.com/JustinTimperio/python_scripts.git
+[submodule "core/python-scripts"]
+	path = core/python-scripts
+	url = https://github.com/JustinTimperio/python-scripts.git
