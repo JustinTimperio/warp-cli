@@ -31,8 +31,9 @@ def build_wdt(base_dir):
     ## download and build wdt from github source
     mkdir(base_dir + '/build', 'u')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/folly.git')
-    #  os.system('cd ' + base_dir + '/build/folly && git checkout "$(git describe --abbrev=0 --always)"')
     os.system('cd ' + base_dir + '/build/folly && git checkout v2019.09.02.00')
+    ## unused command while folly is broke
+    #  os.system('cd ' + base_dir + '/build/folly && git checkout "$(git describe --abbrev=0 --always)"')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/wdt.git')
     mkdir(base_dir + '/build/wdt/_build', 'u')
     os.system('cd ' + base_dir + '/build/wdt/_build && cmake -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_BUILD_TYPE=Release ../ && make -j && sudo make install')
@@ -53,7 +54,9 @@ def setup_warp_remote(ssh_alias, base_dir):
     ## tunnel to a remote machine and install warp-cli
     git_clone = ' "cd ' + base_dir + ' && git clone https://github.com/JustinTimperio/warp-cli.git &&'
     build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install"' 
-    os.system('ssh ' + ssh_alias + git_clone + ' cd warp-cli/ &&' + build)
+    #  os.system('ssh ' + ssh_alias + git_clone + build)
+    ## pull dev 
+    os.system('ssh ' + ssh_alias + git_clone + ' cd warp-cli/ && git checkout development &&' + build)
 
 def uninstall_warp(base_dir):
     rm_dir(base_dir, 'r')
