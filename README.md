@@ -46,7 +46,7 @@ Warp-CLI provides three core transfer modes:
 Warp-CLI also includes a macro system for repeating custom transfers with a single command. Macros are stored transfer commands (stored in ~/warp-cli/macros) that are invoked with `warp -m macro_name`.
 
 To generate a macro:\
- `warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -tr 16 -ri 10000 -ow true`
+ `warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -tr 16 -ri 10000 -ow true -cp '-skip_writes=true -start_port=12345'`
 
 This macro can now be called with:\
  `warp -m daily_backup`
@@ -55,7 +55,7 @@ This macro can now be called with:\
 Warp-CLI provides a number of utilities to streamline the daily use of WTD when sending files in high frequency.
 
 - -cp, --custom_parms: Inject any additional parameters available from `wdt --help`.\
-    `warp -f /dir/to/receive source_ssh /dir/to/send -c '-skip_writes=true -start_port=12345'`
+    `warp -f /dir/to/receive source_ssh /dir/to/send -cp '-skip_writes=true -start_port=12345'`
 - -m, --macro: Execute a custom macro from /var/app/warp-cli/config/ by name.\
     `warp -m macro_name`
 - -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\

@@ -1,7 +1,8 @@
 #! /usr/bin/python
-#### WDT Wrapper for Uni-Cast - https://github.com/facebook/wdt
+#### WDT Wrapper - https://github.com/facebook/wdt
 ## Version 2.0
-from python_scripts import *
+from python_scripts.ps_defuns import *
+from python_scripts.ps_linux import *
 
 ############
 ## Setup WDT
@@ -12,7 +13,7 @@ def build_wdt(base_dir):
     os_name = os_distro()
     #############
     if re.search(r'arch', os_name.lower()):
-        aur_tool = input('Do you use a AUR Tool? If so enter the install command for your Tool. /n I.E. "pacaur -S": ')
+        aur_tool = input('Do you use a AUR Tool? If so enter the install command for your tool... (I.E. "pacaur -S"): ')
         if len(aur_tool) > 0:
             os.system(aur_tool + " wdt-git")
             sys.exit('Done!')
@@ -40,12 +41,11 @@ def build_wdt(base_dir):
 ############
 ## Setup Warp-CLI
 ########
-def setup_warp():
+def setup_warp(base_dir):
     ## setup warp-cli dirs
-    base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
     mkdir(base_dir + '/pool', 'u')
     mkdir(base_dir + '/macros', 'u')
-    open_permissions(base_dir)
+    os.system('sudo chmod 777 ' + base_dir + '/pool ' + base_dir + '/macros')
     ## link warp in bash to warp.py
     os.system('sudo ln -s ' + base_dir + '/core/warp.py /usr/bin/warp')
     build_wdt(base_dir)
