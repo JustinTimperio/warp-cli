@@ -4,7 +4,7 @@
 from global_defuns import *
 import argparse
 base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
-
+print(base_dir)
 ############
 ## WDT CLI Wrapper
 ########
@@ -97,7 +97,7 @@ parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro
 parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
 parser.add_argument("-in", "--install", action='store_true', help="Attempt an automated install of WDT and dependencies.")
 parser.add_argument("-ir", "--install_remote", nargs=2, metavar='SSH.ALIAS /DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies on a remote machine.")
-parser.add_argument("-rm", "--uninstall", metavar='/DIR/TO/UNINSTALL', help="Remove Warp-CLI and config files.")
+parser.add_argument("-rm", "--uninstall", action='store_true', help="Remove Warp-CLI and config files.")
 
 ############
 ## Trigger Core Args
@@ -143,5 +143,5 @@ if args.install_remote:
 
 if args.uninstall:
     from setup import *
-    uninstall_warp(args.uninstall)
+    uninstall_warp()
     sys.exit('Uninstall Attempt Complete!')
