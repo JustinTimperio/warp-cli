@@ -4,7 +4,7 @@
 from global_defuns import *
 import argparse
 base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
-print(base_dir)
+
 ############
 ## WDT CLI Wrapper
 ########
@@ -64,7 +64,7 @@ def run_macro(macro_name):
 ############
 ## Start WDT Daemon
 ########
-def start_recv_daemon(recv_path=base_dir+'/inbound'):
+def start_recv_daemon(recv_path):
     import getpass, datetime
     receiver_cmd = ("wdt -run_as_daemon=true -overwrite=true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
@@ -123,7 +123,7 @@ if args.ship:
 
 ### trigger utilities
 if args.daemon:
-    start_recv_daemon(arg.daemon)
+    start_recv_daemon(args.daemon)
 
 if args.macro:
     if os.path.exists(base_dir + '/macros/' + args.macro):
@@ -141,7 +141,7 @@ if args.install_remote:
     setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:]))
     sys.exit('Remote Install Attempt Complete!')
 
-if args.uninstall:
+if args.uninstall == True:
     from setup import *
-    uninstall_warp()
+    uninstall_warp(base_dir)
     sys.exit('Uninstall Attempt Complete!')

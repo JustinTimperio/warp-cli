@@ -75,7 +75,7 @@ Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully a
 To install WDT and Warp-CLI automatically on your machine:
 1. `sudo mkdir /var/app && sudo chmod 777 /var/app`
 2. `cd /var/app && git clone https://github.com/JustinTimperio/warp-cli.git`
-3. `python3 /var/app/warp-cli/core/warp.py --install /var/app/warp-cli`
+3. `python3 /var/app/warp-cli/core/warp.py --install`
 
 So far, automatic installation is available on:
 - Arch Linux
@@ -89,7 +89,7 @@ WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
 
 ### Uninstall
 Warp-CLI will remove itself from the machine but WDT will remain installed.\
-`warp --uninstall /var/app/warp-cli`
+`warp --uninstall`
 
 
 ### OpenSSH for URL Sharing
