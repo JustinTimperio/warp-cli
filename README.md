@@ -74,9 +74,9 @@ Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully a
 
 ### Automatic Installation
 To install WDT and Warp-CLI automatically on your machine:
-1. `sudo mkdir /var/app && sudo chmod 777 /var/app`
-2. `cd /var/app && git clone https://github.com/JustinTimperio/warp-cli.git`
-3. `python3 /var/app/warp-cli/core/warp.py --install`
+1. `sudo mkdir /usr/app && sudo chmod 777 /usr/app`
+2. `git clone https://github.com/JustinTimperio/warp-cli.git /usr/app`
+3. `python3 /usr/app/warp-cli/core/warp.py --install`
 
 So far, automatic installation is available on:
 - Arch Linux

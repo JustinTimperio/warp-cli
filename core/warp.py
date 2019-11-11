@@ -1,7 +1,8 @@
 #! /usr/bin/python
 #### WDT Wrapper for WDT - https://github.com/facebook/wdt
 ## Version 2.0
-import os, sys, subprocess, argparse, python_scripts
+import argparse
+from python_scripts import *
 
 ############
 ## WDT CLI Wrapper
