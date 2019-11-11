@@ -75,7 +75,6 @@ def start_recv_daemon(recv_path):
     export_path = (base_dir + "/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
     os.system('cat > ' + export_path)
     export_list(export_path, connection_file)
-    print(meta_data)
     return export_path
 
 ############
