@@ -1,8 +1,7 @@
 #! /usr/bin/python
 #### WDT Wrapper - https://github.com/facebook/wdt
 ## Version 2.0
-from python_scripts.ps_defuns import *
-from python_scripts.ps_linux import *
+from python_scripts import *
 
 ############
 ## Setup WDT

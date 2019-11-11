@@ -1,8 +1,7 @@
 #! /usr/bin/python
 #### WDT Wrapper - https://github.com/facebook/wdt
 ## Version 2.0
-from python_scripts.ps_defuns import *
-from python_scripts.ps_linux import *
+from python_scripts import *
 import argparse
 
 ############
@@ -134,7 +133,7 @@ if args.macro:
 
 if args.install == True:
     from setup import *
-    setup_warp()
+    setup_warp(base_dir)
     sys.exit('Install Attempt Complete!')
 
 if args.install_remote:

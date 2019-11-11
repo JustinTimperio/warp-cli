@@ -22,7 +22,7 @@ Warp-CLI shortens this command to:\
 
 ![Demo_Gif](https://imgur.com/N5uSgNV.gif)
 
-Warp.py can also be imported into any python3 script and used to send and receive directories.
+Warp.py can also be imported into any python3 script and then used independently of the CLI to send and receive directories.
 
 ## Usage
 Warp-CLI features a number of shortcuts that attempt to make sending files as trivial and intuitive as possible.
