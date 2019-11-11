@@ -27,6 +27,7 @@ Warp.py can also be imported into any python3 script and used to send and receiv
 ## Usage
 Warp-CLI features a number of shortcuts that attempt to make sending files as trivial and intuitive as possible.
 
+### Transfer Modes
 Warp-CLI provides three core transfer modes:
 - -s, --ship: Send a remote directory to another remote directory.\
     `warp -s source_ssh /dir/to/send dest_ssh /dir/to/receive`  
