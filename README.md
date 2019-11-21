@@ -56,7 +56,7 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
 
 - -cp, --custom_parms: Inject any additional parameters available from `wdt --help`.\
     `warp -f /dir/to/receive source_ssh /dir/to/send -cp '-skip_writes=true -start_port=12345'`
-- -m, --macro: Execute a custom macro from /var/app/warp-cli/config/ by name.\
+- -m, --macro: Execute a custom macro from ~/warp-cli/config/ by name.\
     `warp -m macro_name`
 - -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
     `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow true`
