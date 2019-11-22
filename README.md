@@ -1,4 +1,4 @@
-﻿# Warp-CLI - _Alpha v2.0_
+﻿# Warp-CLI - _Alpha v2.1_
 TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
 
 ## Abstract

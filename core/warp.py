@@ -1,6 +1,6 @@
-#! /usr/bin/python
+#! /usr/bin/env python3
 #### WDT Wrapper - https://github.com/facebook/wdt
-## Version 2.0
+version = 'Warp-CLI Version 2.1.0'
 from python_scripts import *
 import argparse
 
@@ -50,7 +50,6 @@ def build_options(ports, mbytes, interval, overwrite, custom_parms):
 ############
 ## Macro Generator
 ########
-gen_macro_flg = False
 def gen_macro(cmd, macro_name):
     os.system("echo '" + cmd + "' > " + base_dir + "/macros/" + macro_name)
     print("Macro Successfully Generated!")
@@ -96,10 +95,12 @@ parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a
 parser.add_argument("-in", "--install", action='store_true', help="Attempt an automated install of WDT and dependencies.")
 parser.add_argument("-ir", "--install_remote", nargs=2, metavar='SSH.ALIAS /DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies on a remote machine.")
 parser.add_argument("-rm", "--uninstall", action='store_true', help="Remove Warp-CLI and config files.")
+parser.add_argument("-v", "--version", action='store_true', help="List Warp-CLI, WDT, and FOLLY Version.")
 
 ############
 ## Trigger Core Args
 ########
+gen_macro_flg = False
 base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
 args = parser.parse_args()
 
@@ -143,3 +144,9 @@ if args.install_remote:
 if args.uninstall == True:
     from setup import *
     uninstall_warp(base_dir)
+
+if args.version:
+    print(version)
+    os.system('wdt --version | tr a-z A-Z')
+    if os.path.exists(base_dir + '/build/folly/.git/HEAD'):
+        os.system('echo "FOLLY VERSION" `cd ' + base_dir + '/build/folly && git describe`')
