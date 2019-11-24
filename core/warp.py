@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 #### WDT Wrapper - https://github.com/facebook/wdt
-version = '2.1.2'
+version = '2.1.3'
 from python_scripts import *
 import argparse
 

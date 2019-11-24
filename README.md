@@ -21,7 +21,7 @@ Warp-CLI shortens this command to:\
 
 Warp.py can also be imported into any python3 script and then used independently of the CLI to send and receive directories.
 
-## Usage
+## CLI Usage
 Warp-CLI features a number of shortcuts that attempt to make sending files as trivial and intuitive as possible.
 
 ### Transfer Modes
@@ -37,13 +37,14 @@ Warp-CLI provides three core transfer modes:
 - `-tr, --threads` - default=8: In most cases, 8 threads is sufficient to saturate the connection. You may want to raise or lower this depending on your hardware.
 - `-ri, --report_interval`- default=5000: This limits the heartbeat report to 5000 milliseconds(5 seconds).
 - `-ts, --throttle_speed` - default=-1: This setting throttles the transfer to an average mbytes per second.
-- `-ow, --overwrite` - default=false: Allow the receiver to overwrite existing files.
+- `-ow, --overwrite`: Allow the receiver to overwrite existing files.
+- `-sym, --follow_sym`: Let WDT follow symlinks during transfer.
 
 ### Macros
 Warp-CLI also includes a macro system for repeating custom transfers with a single command. Macros are stored transfer commands (stored in ~/warp-cli/macros) that are invoked with `warp -m macro_name`.
 
 To generate a macro:\
- `warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -tr 16 -ri 10000 -ow true -cp '-skip_writes=true -start_port=12345'`
+ `warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -ow -tr 16 -ri 10000 -cp '-skip_writes=true -start_port=12345'`
 
 This macro can now be called with:\
  `warp -m daily_backup`
@@ -56,7 +57,7 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
 - -m, --macro: Execute a custom macro from ~/warp-cli/config/ by name.\
     `warp -m macro_name`
 - -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
-    `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow true`
+    `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow`
 - -d, --daemon: Start a permanent receiver daemon on a local directory and export a file containing the connection URL and meta-data.\
     `warp --daemon /dir/to/receive`
 - -i, --install: Attempt to install WDT and dependencies.\
@@ -81,14 +82,14 @@ So far, automatic installation is available on:
 - Debian 10.x and 9.x
 - Fedora 30, 29 and 28 Workstation and Server
 
-WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
-- CentOS 7
-- Debian 8
-
 ### Uninstall
 Warp-CLI will remove itself from the machine but WDT will remain installed.\
 `warp --uninstall`
 
+### WDT Incompatible OS's
+WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
+- CentOS 7
+- Debian 8
 
 ### OpenSSH for URL Sharing
 Warp uses ssh to securely share connection URLs via a standard Linux pipe. It expects the use of an RSA key, which does not require a user password. While it is possible to use PAM authentication or key passwords, I have not yet added this as a feature.
