@@ -100,7 +100,7 @@ parser.add_argument("-v", "--version", action='store_true', help="List Warp-CLI,
 ### install commands
 parser.add_argument("-in", "--install", action='store_true', help="Attempt an automated install of WDT and dependencies.")
 parser.add_argument("-ir", "--install_remote", nargs=2, metavar='SSH.ALIAS /DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies on a remote machine.")
-parser.add_argument("-dev", "--dev_install", default=False, help="Install the Dev branch of Warp-CLI during a remote install. For Dev use only!")
+parser.add_argument("-dev", "--dev_install", action='store_true', help="Install the Dev branch of Warp-CLI during a remote install. For Dev use only!")
 parser.add_argument("-rm", "--uninstall", action='store_true', help="Remove Warp-CLI and config files.")
 
 ############
@@ -144,7 +144,7 @@ if args.install == True:
 
 if args.install_remote:
     from setup import *
-    setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:], arg.dev_install))
+    setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:]), args.dev_install)
 
 if args.uninstall == True:
     from setup import *

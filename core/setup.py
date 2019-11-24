@@ -59,14 +59,15 @@ def setup_warp(base_dir):
 
 def setup_warp_remote(ssh_alias, base_dir, dev):
     ### tunnel to a remote machine and install warp-cli
-    git_clone = ' "cd ' + base_dir + ' && git clone --recurse-submodules https://github.com/JustinTimperio/warp-cli.git &&'
-    build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install"' 
+    git_clone = 'git clone --recurse-submodules https://github.com/JustinTimperio/warp-cli.git ' + base_dir + '/warp-cli &&'
+    build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install' 
+    dev_switch = ' cd '+ base_dir + '/warp-cli/ && git checkout development && git submodule update --init --recursive && '
     if dev == False:
-        os.system('ssh ' + ssh_alias + git_clone + build)
+        os.system('ssh -t ' + ssh_alias +' "'+ git_clone + build +'"')
     if dev == True:
-        os.system('ssh ' + ssh_alias + git_clone + ' cd warp-cli/ && git checkout development && git submodule update --init --recursive &&' + build)
+        os.system('ssh -t ' + ssh_alias +' "'+ git_clone + dev_switch + build +'"')
 
 def uninstall_warp(base_dir):
     rm_dir(base_dir, sudo=True)
-    rm_file('/usr/bin/warp', sudo=True)
+    os.system('sudo rm /usr/bin/warp')
     print('Warp-CLI Uninstalled!')
