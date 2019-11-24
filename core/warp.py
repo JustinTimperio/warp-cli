@@ -11,8 +11,7 @@ def ship(src_ssh, src_path, recv_ssh, recv_path, options):
     receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
     connection_url = str(receiver_process.stdout.readline().strip())[1:]
-    sender_cmd = ("ssh " + src_ssh + " wdt" + options + "-connection_url=" + connection_url + " -directory " + src_path + " -")
-    subprocess.Popen(sender_cmd, stdout=subprocess.PIPE, shell=True)
+    os.system("echo " + connection_url + " | ssh " + src_ssh + ' wdt' + options + " -directory " + src_path + ' -')
 
 def push(src_path, recv_ssh, recv_path, options):
     cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path +
@@ -43,7 +42,8 @@ def build_options(ports, mbytes, interval, overwrite, custom_parms):
     num_ports = " -num_ports=" + str(args.threads)
     avg_mbytes = " -avg_mbytes_per_sec=" + str(args.throttle_speed)
     report_interval = " -progress_report_interval_millis=" + str(args.report_interval)
-    overwrite = " -overwrite=" + str(args.overwrite)
+    overwrite = " -overwrite=" + str(args.overwrite).lower()
+    sym_links = " -follow_symlinks=" + str(args.follow_sym).lower()
     options = (num_ports + avg_mbytes + report_interval + overwrite + custom_parms)
     return options
 
@@ -64,13 +64,16 @@ def run_macro(macro_name):
 ########
 def start_recv_daemon(recv_path):
     import getpass, datetime
-    receiver_cmd = ("wdt -run_as_daemon=true -overwrite=true -max_mbytes_per_sec=-1 -progress_report_interval_millis=-1 -directory " + recv_path)
+    receiver_cmd = ("wdt -run_as_daemon=true" + options + " -directory " + recv_path)
     receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
     connection_url = str(receiver_process.stdout.readline().strip())[1:]
+    
     ## generate a connection file containing meta data about the daemon
-    meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path + " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path +
+                    " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     connection_file = [meta_data, connection_url]
-    export_path = (base_dir + "/pool/" + getpass.getuser() + "_" + str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
+    export_path = (base_dir + "/pool/" + getpass.getuser() + "_" +
+                   str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
     os.system('cat > ' + export_path)
     export_list(export_path, connection_file)
     return export_path
@@ -85,8 +88,9 @@ parser.add_argument("-f", "--fetch", nargs=3, metavar=('SRC_SSH_ALIAS','SRC_PATH
 ### optional arguments
 parser.add_argument("-tr", "--threads", default="8", metavar='INT', help="Set the number of threads/ports for WDT to use.")
 parser.add_argument("-ri", "--report_interval", default="3000", metavar='INT', help="Update interval in milliseconds for transfer report updates.")
-parser.add_argument("-ts", "--throttle_speed", default="110", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
-parser.add_argument("-ow", "--overwrite", default="false", metavar='BOOL', help="Allow the receiver to overwrite existing files in a directory.")
+parser.add_argument("-ts", "--throttle_speed", default="-1", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
+parser.add_argument("-ow", "--overwrite", action='store_true', help="Allow the receiver to overwrite existing files in a directory.")
+parser.add_argument("-sym", "--follow_sym", action='store_false', help="Let WDT follow symlinks during transfer.")
 parser.add_argument("-cp", "--custom_parms", default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.")
 ### utilities
 parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to ~/warp-cli/macros.")
