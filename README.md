@@ -6,7 +6,7 @@ TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Spee
 
 While WDT provides several benefits, it requires comparatively lengthy build process. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains. Since WDT is designed to fully saturate even the highest-end enterprise hardware, it is likely to overwhelm your network. Please consider this when transferring more than a 1TB of files.
 
-### [Performance Gains](https://github.com/JustinTimperio/warp-cli/Performance.md)
+### [Performance Gains](https://github.com/JustinTimperio/warp-cli/blob/master/Performance.md)
 
 ## Design
 Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](https://github.com/facebook/wdt/wiki/Getting-Started-with-the-WDT-command-line). While the tool works extremely well, building performant commands for daily use is often unwieldy.
