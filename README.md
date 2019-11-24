@@ -34,7 +34,7 @@ Warp-CLI provides three core transfer modes:
     `warp -p /dir/to/push dest_ssh /dir/to/receive`
 
 ### Flags
-- `-tr, --threads` - default=8: In most cases, 8 threads is sufficient to saturate the connection. You may want to raise or lower this depending on your hardware.
+- `-tr, --threads` - default=8: You may want to raise or lower this depending on your hardware.
 - `-ri, --report_interval`- default=5000: This limits the heartbeat report to 5000 milliseconds(5 seconds).
 - `-ts, --throttle_speed` - default=-1: This setting throttles the transfer to an average mbytes per second.
 - `-ow, --overwrite`: Allow the receiver to overwrite existing files.
@@ -62,8 +62,8 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
     `warp --daemon /dir/to/receive`
 - -i, --install: Attempt to install WDT and dependencies.\
     `warp --install`
-- -ri, --remote_install: Attempt to install WDT and dependencies on a remote machine.\
-    `warp -ri ssh.alias /dir/to/install`
+- -ir, --install_remote: Attempt to install WDT and dependencies on a remote machine.\
+    `warp -ir ssh.alias /dir/to/install`
 - -rm, --uninstall: Uninstall Warp-CLI and config files.\
     `warp --uninstall`
 
