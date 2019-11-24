@@ -35,7 +35,7 @@ def build_wdt(base_dir):
     ### unused command while folly is broke
     #  os.system('cd ' + base_dir + '/build/folly && git checkout "$(git describe --abbrev=0 --always)"')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/wdt.git')
-    mkdir(base_dir + '/build/wdt/_build', 'u')
+    mkdir(base_dir + '/build/wdt/_build', sudo=False)
     os.system('cd ' + base_dir + '/build/wdt/_build && cmake -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_BUILD_TYPE=Release ../ && make -j && sudo make install')
 
 ############
