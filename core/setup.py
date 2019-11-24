@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 #### WDT Wrapper - https://github.com/facebook/wdt
-## Version 2.1.0
+## Version 2.1.2
 from python_scripts import *
 
 ############
@@ -47,22 +47,28 @@ def setup_warp(base_dir):
     mkdir(base_dir + '/macros', 'u')
     os.system('sudo chmod 777 ' + base_dir + '/pool ' + base_dir + '/macros')
     ## link warp in bash to warp.py
+    rm_file('/usr/bin/warp', 'r')
     os.system('sudo ln -s ' + base_dir + '/core/warp.py /usr/bin/warp')
-    build = yn_frame('Do you want to attempt an automatic WDT build?')
+    print('Warp-CLI is now setup and registered in /usr/bin!')
+    
+    ### Start Automated Setup
+    build = yn_frame('Do you want to attempt an automatic WDT build and install?')
     if build == True:
-        build_wdt(base_dir)
-        os.system('warp --version')
+        build_wdt(base_dir, dev)
+        os.system("echo '=============================' && warp --version && echo '============================='")
     if build == False:
         print('Refer to https://github.com/facebook/wdt/blob/master/build/BUILD.md for manual builds.')
 
-def setup_warp_remote(ssh_alias, base_dir):
+def setup_warp_remote(ssh_alias, base_dir, dev=False):
     ## tunnel to a remote machine and install warp-cli
     git_clone = ' "cd ' + base_dir + ' && git clone --recurse-submodules https://github.com/JustinTimperio/warp-cli.git &&'
     build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install"' 
-    os.system('ssh ' + ssh_alias + git_clone + build + ' && warp --version')
-    ## pull dev branch for testing 
-    #  os.system('ssh ' + ssh_alias + git_clone + ' cd warp-cli/ && git checkout development && git submodule update --init --recursive &&' + build + ' && warp --version')
+    if dev == False:
+        os.system('ssh ' + ssh_alias + git_clone + build)
+    if dev == True:
+        os.system('ssh ' + ssh_alias + git_clone + ' cd warp-cli/ && git checkout development && git submodule update --init --recursive &&' + build)
 
 def uninstall_warp(base_dir):
     rm_dir(base_dir, 'r')
     rm_file('/usr/bin/warp', 'r')
+    print('Warp-CLI Uninstalled!')

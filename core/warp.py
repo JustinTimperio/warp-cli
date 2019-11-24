@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 #### WDT Wrapper - https://github.com/facebook/wdt
-version = 'Warp-CLI Version 2.1.0'
+version = '2.1.2'
 from python_scripts import *
 import argparse
 
@@ -23,7 +23,7 @@ def push(src_path, recv_ssh, recv_path, options):
     elif gen_macro_flg is True:
         gen_macro(cmd, args.gen_macro)
     else:
-        sys.exit('Critical Error Executing the Warp!')
+        sys.exit('Critical Error: gen_macro_flg Not Set!')
 
 def fetch(src_ssh, src_path, recv_path, options):
     cmd = ("wdt" + options + " -directory " + recv_path +
@@ -34,7 +34,7 @@ def fetch(src_ssh, src_path, recv_path, options):
     elif gen_macro_flg == True:
         gen_macro(cmd, args.gen_macro)
     else:
-        sys.exit('Critical Error Executing the Warp!')
+        sys.exit('Critical Error: gen_macro_flg Not Set!')
 
 ############
 ## Options
@@ -92,10 +92,12 @@ parser.add_argument("-cp", "--custom_parms", default="", metavar="-CUSTOM_PARM v
 parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to ~/warp-cli/macros.")
 parser.add_argument("-m", "--macro", metavar='MACRO_NAME', help="Execute a macro by name from ~/warp-cli/macros.")
 parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME', help="Generate a new macro. This will overwrite a old macro if named the same.")
+parser.add_argument("-v", "--version", action='store_true', help="List Warp-CLI, WDT, and FOLLY Version.")
+### install commands
 parser.add_argument("-in", "--install", action='store_true', help="Attempt an automated install of WDT and dependencies.")
 parser.add_argument("-ir", "--install_remote", nargs=2, metavar='SSH.ALIAS /DIR/TO/INSTALL', help="Attempt an automated install of WDT and dependencies on a remote machine.")
+parser.add_argument("-dev", "--dev_install", default=False, help="Install the Dev branch of Warp-CLI during a remote install. For Dev use only!")
 parser.add_argument("-rm", "--uninstall", action='store_true', help="Remove Warp-CLI and config files.")
-parser.add_argument("-v", "--version", action='store_true', help="List Warp-CLI, WDT, and FOLLY Version.")
 
 ############
 ## Trigger Core Args
@@ -106,7 +108,7 @@ args = parser.parse_args()
 
 if args.gen_macro:
     if args.ship:
-        sys.exit('Macros for --ship commands are NOT yet supported!')
+        sys.exit('Macros for --ship Commands Are NOT Yet Supported!')
     else:
         gen_macro_flg = True
 
@@ -128,25 +130,24 @@ if args.daemon:
 
 if args.macro:
     if os.path.exists(base_dir + '/macros/' + args.macro):
-        sys.exit(args.macro + " is not found in " + base_dir + "/macros/")
+        sys.exit(args.macro + " Was NOT Found in " + base_dir + "/macros/")
     else:
         run_macro(args.macro)
 
 if args.install == True:
     from setup import *
     setup_warp(base_dir)
-    sys.exit('Install Attempt Complete!')
 
 if args.install_remote:
     from setup import *
-    setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:]))
+    setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:], arg.dev_install))
 
 if args.uninstall == True:
     from setup import *
     uninstall_warp(base_dir)
 
 if args.version:
-    print(version)
+    print('Warp-CLI Version ' + version)
     os.system('wdt --version | tr a-z A-Z')
     if os.path.exists(base_dir + '/build/folly/.git/HEAD'):
         os.system('echo "FOLLY VERSION" `cd ' + base_dir + '/build/folly && git describe`')
