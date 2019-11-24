@@ -90,7 +90,7 @@ parser.add_argument("-tr", "--threads", default="8", metavar='INT', help="Set th
 parser.add_argument("-ri", "--report_interval", default="3000", metavar='INT', help="Update interval in milliseconds for transfer report updates.")
 parser.add_argument("-ts", "--throttle_speed", default="-1", metavar='INT', help=" Throttle the transfer to an average mbytes per second.")
 parser.add_argument("-ow", "--overwrite", action='store_true', help="Allow the receiver to overwrite existing files in a directory.")
-parser.add_argument("-sym", "--follow_sym", action='store_false', help="Let WDT follow symlinks during transfer.")
+parser.add_argument("-sym", "--follow_sym", action='store_true', help="Let WDT follow symlinks during transfer.")
 parser.add_argument("-cp", "--custom_parms", default="", metavar="-CUSTOM_PARM value", help="Inject any additional parameters available in `wdt --help`.")
 ### utilities
 parser.add_argument("-d", "--daemon", metavar='/DIR/FOR/DAEMON', help="Start a receiver daemon on a directory. Returns a connection url to ~/warp-cli/macros.")
