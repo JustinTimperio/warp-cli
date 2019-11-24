@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 #### WDT Wrapper - https://github.com/facebook/wdt
-## Version 2.1.2
+version = '2.1.3'
 from python_scripts import *
 
 ############
@@ -32,7 +32,6 @@ def build_wdt(base_dir):
     mkdir(base_dir + '/build', sudo=False)
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/folly.git')
     os.system('cd ' + base_dir + '/build/folly && git checkout v2019.09.02.00')
-    ### unused command while folly is broke
     #  os.system('cd ' + base_dir + '/build/folly && git checkout "$(git describe --abbrev=0 --always)"')
     os.system('cd ' + base_dir + '/build && git clone https://github.com/facebook/wdt.git')
     mkdir(base_dir + '/build/wdt/_build', sudo=False)
@@ -47,7 +46,6 @@ def setup_warp(base_dir):
     mkdir(base_dir + '/macros', sudo=False)
     os.system('sudo chmod 777 ' + base_dir + '/pool ' + base_dir + '/macros')
     ### link warp in bash to warp.py
-    rm_file('/usr/bin/warp', sudo=True)
     os.system('sudo ln -s ' + base_dir + '/core/warp.py /usr/bin/warp')
     print('Warp-CLI is Now Setup and Registered in /usr/bin!')
     
