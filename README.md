@@ -1,4 +1,4 @@
-﻿# Warp-CLI - _Alpha v2.0_
+﻿# Warp-CLI - _Alpha v2.1_
 TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
 
 ## Abstract
@@ -6,10 +6,7 @@ TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Spee
 
 While WDT provides several benefits, it requires comparatively lengthy build process. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains. Since WDT is designed to fully saturate even the highest-end enterprise hardware, it is likely to overwhelm your network. Please consider this when transferring more than a 1TB of files.
 
-## Performance Gains
-Below are timed downloads(in seconds) over my personal network which is 1 Gigabit. Each progressive transfer increases the total size of the transfer in GB, while reducing the total number of files being transferred. WDT easily maintains near full 1 Gigabit saturation across all 3 transfers while HPN-SFTP and SSH struggle to transfer multiple small files(single-thread limited). With encryption disabled HPN-SSH reaches full saturation when transferring large files, while stock SSH continues to struggle under heavy load. If you have access to +10 Gigabit networking hardware you can expect WDT to scale to ~40 Gigabit and HPN-SSH to scale to ~10 Gigabit.
-
-![Performance Graph](https://i.imgur.com/ax7eKzj.png)
+### [Performance Gains](https://github.com/JustinTimperio/warp-cli/blob/master/Performance.md)
 
 ## Design
 Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](https://github.com/facebook/wdt/wiki/Getting-Started-with-the-WDT-command-line). While the tool works extremely well, building performant commands for daily use is often unwieldy.
@@ -56,7 +53,7 @@ Warp-CLI provides a number of utilities to streamline the daily use of WTD when 
 
 - -cp, --custom_parms: Inject any additional parameters available from `wdt --help`.\
     `warp -f /dir/to/receive source_ssh /dir/to/send -cp '-skip_writes=true -start_port=12345'`
-- -m, --macro: Execute a custom macro from /var/app/warp-cli/config/ by name.\
+- -m, --macro: Execute a custom macro from ~/warp-cli/config/ by name.\
     `warp -m macro_name`
 - -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
     `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow true`
@@ -75,7 +72,7 @@ Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully a
 ### Automatic Installation
 To install WDT and Warp-CLI automatically on your machine:
 1. `sudo mkdir /usr/app && sudo chmod 777 /usr/app`
-2. `git clone https://github.com/JustinTimperio/warp-cli.git /usr/app/warp-cli`
+2. `git clone --recurse-submodules https://github.com/JustinTimperio/warp-cli.git /usr/app/warp-cli`
 3. `python3 /usr/app/warp-cli/core/warp.py --install`
 
 So far, automatic installation is available on:
