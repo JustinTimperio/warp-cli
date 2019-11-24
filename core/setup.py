@@ -54,12 +54,12 @@ def setup_warp(base_dir):
     ### Start Automated Setup
     build = yn_frame('Do you want to attempt an automatic WDT build and install?')
     if build == True:
-        build_wdt(base_dir, dev)
+        build_wdt(base_dir)
         os.system("echo '=============================' && warp --version && echo '============================='")
     if build == False:
         print('Refer to https://github.com/facebook/wdt/blob/master/build/BUILD.md for manual builds.')
 
-def setup_warp_remote(ssh_alias, base_dir, dev=False):
+def setup_warp_remote(ssh_alias, base_dir, dev):
     ## tunnel to a remote machine and install warp-cli
     git_clone = ' "cd ' + base_dir + ' && git clone --recurse-submodules https://github.com/JustinTimperio/warp-cli.git &&'
     build = ' python3 ' + base_dir + '/warp-cli/core/warp.py --install"' 
