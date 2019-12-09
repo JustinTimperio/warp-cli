@@ -116,6 +116,7 @@ if args.gen_macro:
 
 if args.version:
     print('Warp-CLI Version ' + version)
+    os.system('wdt --version | tr a-z A-Z')
     if os.path.exists(base_dir + '/build/folly/.git/HEAD'):
         os.system('echo "FOLLY VERSION" `cd ' + base_dir + '/build/folly && git describe`')
 
