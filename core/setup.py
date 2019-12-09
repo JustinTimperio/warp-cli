@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 #### WDT Wrapper - https://github.com/facebook/wdt
-version = '2.1.3'
+version = '2.1.4'
 from python_scripts import *
 
 ############
@@ -12,7 +12,7 @@ def build_wdt(base_dir):
     os_name = os_distro()
     #############
     if re.search(r'arch', os_name.lower()):
-        aur_tool = input('Enter the Install Command for Your Tool... (I.E. "pacaur -S"): ')
+        aur_tool = input('Enter the Install Command for Your AUR Tool... (I.E. "pacaur -S"): ').strip()
         if len(aur_tool) > 2:
             os.system(aur_tool + " wdt-git")
             sys.exit('Done!')

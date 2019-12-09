@@ -1,17 +1,17 @@
 #! /usr/bin/env python3
 #### WDT Wrapper - https://github.com/facebook/wdt
-version = '2.1.3'
+version = '2.1.4'
 from python_scripts import *
-import argparse
+import sys, argparse
 
 ############
 ## WDT CLI Wrapper
 ########
 def ship(src_ssh, src_path, recv_ssh, recv_path, options):
-    receiver_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path)
-    receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
-    connection_url = str(receiver_process.stdout.readline().strip())[1:]
-    os.system("echo " + connection_url + " | ssh " + src_ssh + ' wdt' + options + " -directory " + src_path + ' -')
+    recv_cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path)
+    run_cmd = subprocess.Popen(recv_cmd, stdout=subprocess.PIPE, shell=True)
+    wdt_url = str(run_cmd.stdout.readline().strip())[1:]
+    os.system("echo " + wdt_url + " | ssh " + src_ssh + ' wdt' + options + " -directory " + src_path + ' -')
 
 def push(src_path, recv_ssh, recv_path, options):
     cmd = ("ssh " + recv_ssh + " wdt" + options + " -directory " + recv_path +
@@ -20,7 +20,7 @@ def push(src_path, recv_ssh, recv_path, options):
     if gen_macro_flg is False:
         os.system(cmd)
     elif gen_macro_flg is True:
-        gen_macro(cmd, args.gen_macro)
+        gen_macro(cmd, escape_bash(args.gen_macro))
     else:
         sys.exit('Critical Error: gen_macro_flg Not Set!')
 
@@ -31,7 +31,7 @@ def fetch(src_ssh, src_path, recv_path, options):
     if gen_macro_flg == False:
         os.system(cmd)
     elif gen_macro_flg == True:
-        gen_macro(cmd, args.gen_macro)
+        gen_macro(cmd, escape_bash(args.gen_macro))
     else:
         sys.exit('Critical Error: gen_macro_flg Not Set!')
 
@@ -62,20 +62,18 @@ def run_macro(macro_name):
 ############
 ## Start WDT Daemon
 ########
-def start_recv_daemon(recv_path):
-    import getpass, datetime
-    receiver_cmd = ("wdt -run_as_daemon=true" + options + " -directory " + recv_path)
-    receiver_process = subprocess.Popen(receiver_cmd, stdout=subprocess.PIPE, shell=True)
-    connection_url = str(receiver_process.stdout.readline().strip())[1:]
+def start_recv_daemon(recv_path, options):
+    from getpass import getuser as user
+    from datetime import datetime
+    recv_cmd = ("wdt -run_as_daemon=true" + options + " -directory " + recv_path)
+    run_cmd = subprocess.Popen(recv_cmd, stdout=subprocess.PIPE, shell=True)
+    wdt_url = str(run_cmd.stdout.readline().strip())[1:]
     
     ## generate a connection file containing meta data about the daemon
-    meta_data = str("Recvier daemon started by " + getpass.getuser() + " in " + recv_path +
-                    " at " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    connection_file = [meta_data, connection_url]
-    export_path = (base_dir + "/pool/" + getpass.getuser() + "_" +
-                   str(datetime.datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt")
+    meta_data = str("Recvier daemon started by " + user() + " in " + recv_path + " at " + str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    export_path = base_dir + "/pool/" + user() + "_" + str(datetime.now().strftime("%m_%d-%H:%M_%S")) + ".txt"
     os.system('cat > ' + export_path)
-    export_list(export_path, connection_file)
+    export_list(export_path, [meta_data, wdt_url])
     return export_path
 
 ############
@@ -106,9 +104,9 @@ parser.add_argument("-rm", "--uninstall", action='store_true', help="Remove Warp
 ############
 ## Trigger Core Args
 ########
-gen_macro_flg = False
-base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
 args = parser.parse_args()
+base_dir = os.path.dirname(os.path.realpath(__file__))[:-5]
+gen_macro_flg = False
 
 if args.gen_macro:
     if args.ship:
@@ -116,42 +114,42 @@ if args.gen_macro:
     else:
         gen_macro_flg = True
 
+if args.version:
+    print('Warp-CLI Version ' + version)
+    if os.path.exists(base_dir + '/build/folly/.git/HEAD'):
+        os.system('echo "FOLLY VERSION" `cd ' + base_dir + '/build/folly && git describe`')
+
 if args.fetch:
-    fetch(''.join(args.fetch[:-2]), ''.join(args.fetch[1:-1]),''.join(args.fetch[2:]),
-          build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
+    fetch(args.fetch[0], escape_bash(args.fetch[1]), escape_bash(args.fetch[2]),
+        build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
 
-if args.push:
-    push(''.join(args.push[:-2]), ''.join(args.push[1:-1]), ''.join(args.push[2:]),
-          build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
+elif args.push:
+    push(escape_bash(args.push[0]), args.push[1], escape_bash(args.push[2]), 
+        build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
 
-if args.ship:
-    ship(''.join(args.ship[:-3]), ''.join(args.ship[1:-2]), ''.join(args.ship[2:-1]), ''.join(args.ship[3:]),
-          build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
+elif args.ship:
+    ship(args.ship[0], escape_bash(args.ship[1]), args.ship[2], escape_bash(args.ship[3]),
+        build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
 
 ### trigger utilities
-if args.daemon:
-    start_recv_daemon(args.daemon)
+elif args.daemon:
+    start_recv_daemon(escape_bash(args.daemon), 
+        build_options(args.threads, args.throttle_speed, args.report_interval, args.overwrite, args.custom_parms))
 
-if args.macro:
-    if os.path.exists(base_dir + '/macros/' + args.macro):
+elif args.macro:
+    if not os.path.exists(base_dir + '/macros/' + args.macro):
         sys.exit(args.macro + " Was NOT Found in " + base_dir + "/macros/")
     else:
-        run_macro(args.macro)
+        run_macro(escape_bash(args.macro))
 
-if args.install == True:
+elif args.install == True:
     from setup import *
     setup_warp(base_dir)
 
-if args.install_remote:
+elif args.install_remote:
     from setup import *
-    setup_warp_remote(''.join(args.install_remote[:-1]), ''.join(args.install_remote[1:]), args.dev_install)
+    setup_warp_remote(args.install_remote[0], args.install_remote[1], args.dev_install)
 
-if args.uninstall == True:
+elif args.uninstall == True:
     from setup import *
     uninstall_warp(base_dir)
-
-if args.version:
-    print('Warp-CLI Version ' + version)
-    os.system('wdt --version | tr a-z A-Z')
-    if os.path.exists(base_dir + '/build/folly/.git/HEAD'):
-        os.system('echo "FOLLY VERSION" `cd ' + base_dir + '/build/folly && git describe`')
