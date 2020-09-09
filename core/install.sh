@@ -107,5 +107,5 @@ echo ''
 echo '===================================='
 echo ''
 
-ln -sf $base_dir/core/warp.py /usr/bin/warp
+ln -sf $base/core/warp.py /usr/bin/warp
 warp -v 
