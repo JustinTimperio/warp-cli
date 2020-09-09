@@ -1,26 +1,28 @@
-# Warp-CLI - _Alpha v2.1_
+# Warp-CLI - v3.0.0
 TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
+
+***Index:***
+- [Abstract]()
+- [CLI Usage]()
+- [Automated Setup]()
+- [Performance Gains]()
+
 
 ## Abstract
 [WDT](https://github.com/facebook/wdt) is designed to provide the highest possible speed when transferring files(to be only hardware and network limited). WDT provides many advantages over most file transfer protocols including: native concurrency, end-to-end encryption, IPV6 support, and the ability to easily achieve +40Gbit speeds when supported. Unlike most file transfer solutions (Except [NORM](https://www.nrl.navy.mil/itd/ncs/products/norm)) WDT provides a native parallel solution for transferring files by separating files into chunks then queuing them across an arbitrary number of threads and TCP connections. In most cases, file transfer times are dramatically reduced compared to traditional methods like FTP or HTTP.
 
 While WDT provides several benefits, it requires a comparatively lengthy build process. Additionally, if you are already using a modified version of SSH such as [HPN-SSH](https://www.psc.edu/hpn-ssh), you are likely to see smaller performance gains. Since WDT is designed to fully saturate even the highest-end enterprise hardware, it will overwhelm your network. Please consider this when transferring more than a 1TB of files.
 
-### [Performance Gains](https://github.com/JustinTimperio/warp-cli/blob/master/Performance.md)
-Click the above link to get a detailed comparison of WDT performance compared to traditional file transfer protocols.
-
-## Design
 Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](https://github.com/facebook/wdt/wiki/Getting-Started-with-the-WDT-command-line). While the tool works extremely well, building performant commands for daily use is often unwieldy.
 
 For example:\
 `wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/recv | ssh ssh.alias wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/fetch/ -`
 
 Warp-CLI shortens this command to:\
- `warp -f ssh.alias /dir/to/fetch/ /dir/to/recv`
+ `warp -f ssh_alias /dir/to/fetch/ /dir/to/recv`
 
 ![Demo_Gif](https://imgur.com/N5uSgNV.gif)
 
-Warp.py can also be imported into any python3 script and then used independently of the CLI to send and receive directories.
 
 ## CLI Usage
 Warp-CLI features several shortcuts that attempt to make sending files as trivial and intuitive as possible.
@@ -40,6 +42,7 @@ Warp-CLI provides three core transfer modes:
 - `-ts, --throttle_speed`: default=-1: This setting throttles the transfer to an average mbytes per second.
 - `-ow, --overwrite`: Allow the receiver to overwrite existing files.
 - `-sym, --follow_sym`: Let WDT follow symlinks during transfer.
+- `-fh, --fix_hostname`: Local transfers often fail unless the WDT receiver session overrides its hostname with its local ipv4 address. 
 
 ### Macros
 Warp-CLI also includes a macro system for repeating custom transfers with a single command. Macros are stored transfer commands (stored in ~/warp-cli/macros) that are invoked with `warp -m macro_name`.
@@ -59,33 +62,28 @@ Warp-CLI provides a number of utilities and custom options to assist in more com
     `warp -m macro_name`
 - -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
     `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow`
-- -d, --daemon: Start a permanent receiver daemon on a local directory and export a file containing connection meta-data.\
-    `warp --daemon /dir/to/receive`
-- -i, --install: Attempt to install WDT and dependencies.\
-    `warp --install`
-- -ir, --install_remote: Attempt to install WDT and dependencies on a remote machine.\
-    `warp -ir ssh.alias /dir/to/install`
-- -rm, --uninstall: Uninstall Warp-CLI and config files.\
-    `warp --uninstall`
 
-## Setup - _STILL UNDER DEVELOPMENT_
+## Setup
 Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully automated installation process for as many Linux flavors as possible. If your flavor is not supported, please refer to the [manual install documentation](https://github.com/facebook/wdt/blob/master/build/BUILD.md). Once you install WDT and its dependencies Warp-CLI will function normally.  
 
 ### Automatic Installation
 To install WDT and Warp-CLI automatically on your machine:
-1. `sudo mkdir /usr/app && sudo chmod 777 /usr/app`
-2. `git clone --recurse-submodules https://github.com/JustinTimperio/warp-cli.git /usr/app/warp-cli`
-3. `python3 /usr/app/warp-cli/core/warp.py --install`
+``` 
+place-holder
+```
 
 **So far, automatic installation is available on:**
-- Arch Linux
-- Ubuntu 19.xx and 18.xx Workstation and Server
+- Arch Linux and Manjaro
+- Ubuntu 20.xx, 19.xx, 18.xx Workstation and Server
 - Debian 10.x and 9.x
 - Fedora 30, 29 and 28 Workstation and Server
+- CentOS 8
 
 ### Uninstall
 Warp-CLI will remove itself from the machine but WDT will remain installed.\
-`warp --uninstall`
+```
+/opt/warp-cli/core/remove.sh
+```
 
 ### WDT Incompatible OS's
 WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
@@ -94,7 +92,11 @@ WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
 
 ### OpenSSH for URL Sharing
 Warp uses ssh to securely share connection URLs via a standard Linux pipe. It expects the use of an RSA key, which does not require a user password. While it is possible to use PAM authentication or key passwords, I have not yet added this as a feature.
-#### URL Sharing Security While Using  `--ship`
-Warp-CLI uses the recommended method for transferring URLs except for the command to send directories between two remote machines. URLs are returned to the host rather than being tunneled through the remote machine to the next remote machine. This allows two remote servers to transfer files between one another without having the permission needed to connect directly via ssh.
-#### SSH Aliases
-Since Warp-CLI is designed mainly for daily use, it is highly recommended(if not assumed) that you already have an ssh alias for the server you are connecting to. If you don't have an existing SSH alias for the server you are transferring files to, please consider [creating one.](https://www.howtogeek.com/75007/stupid-geek-tricks-use-your-ssh-config-file-to-create-aliases-for-hosts/)
+
+### SSH Aliases
+Since Warp-CLI is designed for daily use and it is highly recommended(if not assumed) that you already have an ssh alias for the server you are connecting to. If you don't have an existing SSH alias for the server you are transferring files to, please consider [creating one.](https://www.howtogeek.com/75007/stupid-geek-tricks-use-your-ssh-config-file-to-create-aliases-for-hosts/)
+
+## Performance Gains
+Below are timed downloads(in seconds) over my personal network which is 1 Gigabit. Each progressive transfer increases the total size of the transfer in GB, while reducing the total number of files being transferred. WDT easily maintains near full 1 Gigabit saturation across all 3 transfers while HPN-SFTP and SSH struggle to transfer multiple small files(single-thread limited). With encryption disabled HPN-SSH reaches full saturation when transferring large files, while stock SSH continues to struggle under heavy load. If you have access to +10 Gigabit networking hardware you can expect WDT to scale to ~40 Gigabit and HPN-SSH to scale to ~10 Gigabit.
+
+![Performance Graph](https://i.imgur.com/ax7eKzj.png)
