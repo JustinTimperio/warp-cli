@@ -51,13 +51,10 @@ if ! test -f $base; then
   rm -R $base
 fi
 
-git clone --recursive-submodules https://github.com/JustinTimperio/warp-cli.git $base
+git clone https://github.com/JustinTimperio/warp-cli.git $base
 
 # Link to /usr/bin
-if test -f /usr/bin/warp; then
-  rm /usr/bin/warp
-fi
-ln -s $base/core/warp.py /usr/bin/warp
+ln -sf $base/core/warp.py /usr/bin/warp
 
 #################################
 # Manual Build of WDT and Libs
@@ -106,6 +103,4 @@ make install
 echo ''
 echo '===================================='
 echo ''
-
-ln -sf $base/core/warp.py /usr/bin/warp
 warp -v 
