@@ -68,7 +68,7 @@ Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully a
 ### Automatic Installation
 To install WDT and Warp-CLI automatically on your machine:
 ``` 
-curl https://raw.githubusercontent.com/JustinTimperio/warp-cli/master/core/install.sh | bash
+curl https://raw.githubusercontent.com/JustinTimperio/warp-cli/master/core/install.sh | sudo bash
 ```
 
 **So far, automatic installation is available on:**
