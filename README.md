@@ -2,10 +2,10 @@
 TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
 
 ***Index:***
-- [Abstract]()
-- [CLI Usage]()
-- [Automated Setup]()
-- [Performance Gains]()
+- [Abstract](https://github.com/JustinTimperio/warp-cli#abstract)
+- [CLI Usage](https://github.com/JustinTimperio/warp-cli#cli-usage)
+- [Automated Setup](https://github.com/JustinTimperio/warp-cli#setup)
+- [Performance Gains](https://github.com/JustinTimperio/warp-cli#performance-gains)
 
 
 ## Abstract
@@ -15,11 +15,15 @@ While WDT provides several benefits, it requires a comparatively lengthy build p
 
 Warp-CLI is mainly a wrapper for the limited existing [CLI app provided by WDT](https://github.com/facebook/wdt/wiki/Getting-Started-with-the-WDT-command-line). While the tool works extremely well, building performant commands for daily use is often unwieldy.
 
-For example:\
-`wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/recv | ssh ssh.alias wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/fetch/ -`
+For example:
+```
+wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/recv | ssh ssh.alias wdt -num_ports=8 -avg_mbytes_per_sec=100 -progress_report_interval_millis=5000 -overwrite=false -directory /dir/to/fetch/ -
+```
 
-Warp-CLI shortens this command to:\
- `warp -f ssh_alias /dir/to/fetch/ /dir/to/recv`
+Warp-CLI shortens this command to:
+```
+warp -f ssh_alias /dir/to/fetch/ /dir/to/recv
+```
 
 ![Demo_Gif](https://imgur.com/N5uSgNV.gif)
 
@@ -42,26 +46,21 @@ Warp-CLI provides three core transfer modes:
 - `-ts, --throttle_speed`: default=-1: This setting throttles the transfer to an average mbytes per second.
 - `-ow, --overwrite`: Allow the receiver to overwrite existing files.
 - `-sym, --follow_sym`: Let WDT follow symlinks during transfer.
-- `-fh, --fix_hostname`: Local transfers often fail unless the WDT receiver session overrides its hostname with its local ipv4 address. 
+- `-fh, --fix_hostname`: Local transfers often fail unless the WDT receiver session overrides its hostname with its local ipv4 address.
+- `-cp, --custom_parms`: Inject any additional parameters available from `wdt --help`.
 
 ### Macros
-Warp-CLI also includes a macro system for repeating custom transfers with a single command. Macros are stored transfer commands (stored in ~/warp-cli/macros) that are invoked with `warp -m macro_name`.
+Warp-CLI also includes a macro system for repeating custom transfers with a single command. Macros are stored transfer commands (stored in ~/.warp/macros) that are invoked with `warp -m macro_name`.
 
-To generate a macro:\
- `warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -ow -tr 16 -ri 10000 -cp '-skip_writes=true -start_port=12345'`
+To generate a macro:
+ ```
+ warp -gm daily_backup -f source_ssh /dir/to/backup /dir/to/store/backup -ow -tr 16 -ri 10000 -cp '-skip_writes=true -start_port=12345'
+ ```
 
-This macro can now be called with:\
- `warp -m daily_backup`
-
-### Utilities
-Warp-CLI provides a number of utilities and custom options to assist in more complicated transfers and WDT deployment.
-
-- -cp, --custom_parms: Inject any additional parameters available from `wdt --help`.\
-    `warp -f /dir/to/receive source_ssh /dir/to/send -cp '-skip_writes=true -start_port=12345'`
-- -m, --macro: Execute a custom macro from ~/warp-cli/config/ by name.\
-    `warp -m macro_name`
-- -gm, --gen_macro: Enter your transfer command as normal and include the gen_macro with a name for your new macro.\
-    `warp -gm macro_name -f source_ssh /dir/to/fetch /dir/to/receive -tr 16 -ri 10000 -ow`
+This macro can now be called with:
+ ```
+ warp -m daily_backup
+```
 
 ## Setup
 Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully automated installation process for as many Linux flavors as possible. If your flavor is not supported, please refer to the [manual install documentation](https://github.com/facebook/wdt/blob/master/build/BUILD.md). Once you install WDT and its dependencies Warp-CLI will function normally.  
@@ -69,7 +68,7 @@ Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully a
 ### Automatic Installation
 To install WDT and Warp-CLI automatically on your machine:
 ``` 
-place-holder
+curl https://raw.githubusercontent.com/JustinTimperio/warp-cli/master/core/install.sh | bash
 ```
 
 **So far, automatic installation is available on:**
@@ -85,15 +84,16 @@ Warp-CLI will remove itself from the machine but WDT will remain installed.\
 /opt/warp-cli/core/remove.sh
 ```
 
-### WDT Incompatible OS's
+### Other Setup Info
+#### WDT Incompatible OS's
 WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
 - CentOS 7
 - Debian 8
 
-### OpenSSH for URL Sharing
+#### OpenSSH for URL Sharing
 Warp uses ssh to securely share connection URLs via a standard Linux pipe. It expects the use of an RSA key, which does not require a user password. While it is possible to use PAM authentication or key passwords, I have not yet added this as a feature.
 
-### SSH Aliases
+#### SSH Aliases
 Since Warp-CLI is designed for daily use and it is highly recommended(if not assumed) that you already have an ssh alias for the server you are connecting to. If you don't have an existing SSH alias for the server you are transferring files to, please consider [creating one.](https://www.howtogeek.com/75007/stupid-geek-tricks-use-your-ssh-config-file-to-create-aliases-for-hosts/)
 
 ## Performance Gains
