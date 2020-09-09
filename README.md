@@ -62,7 +62,7 @@ This macro can now be called with:
  warp -m daily_backup
 ```
 
-## Setup
+## Automated Setup
 Since WDT requires multiple dependencies, Warp-CLI attempts to provide a fully automated installation process for as many Linux flavors as possible. If your flavor is not supported, please refer to the [manual install documentation](https://github.com/facebook/wdt/blob/master/build/BUILD.md). Once you install WDT and its dependencies Warp-CLI will function normally.  
 
 ### Automatic Installation
@@ -79,21 +79,22 @@ curl https://raw.githubusercontent.com/JustinTimperio/warp-cli/master/core/insta
 - CentOS 8
 
 ### Uninstall
-Warp-CLI will remove itself from the machine but WDT will remain installed.\
+Warp-CLI will remove itself from the machine but WDT will remain installed.
 ```
 /opt/warp-cli/core/remove.sh
 ```
 
-### Other Setup Info
-#### WDT Incompatible OS's
+### Other Setup and Usage Information
+
+**WDT Incompatible OS's**\
 WDT requires CMAKE version > 3.2 or greater, making it incompatible on:
 - CentOS 7
 - Debian 8
 
-#### OpenSSH for URL Sharing
+**OpenSSH for URL Sharing**\
 Warp uses ssh to securely share connection URLs via a standard Linux pipe. It expects the use of an RSA key, which does not require a user password. While it is possible to use PAM authentication or key passwords, I have not yet added this as a feature.
 
-#### SSH Aliases
+**SSH Aliases**\
 Since Warp-CLI is designed for daily use and it is highly recommended(if not assumed) that you already have an ssh alias for the server you are connecting to. If you don't have an existing SSH alias for the server you are transferring files to, please consider [creating one.](https://www.howtogeek.com/75007/stupid-geek-tricks-use-your-ssh-config-file-to-create-aliases-for-hosts/)
 
 ## Performance Gains
