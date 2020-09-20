@@ -83,7 +83,7 @@ curl https://raw.githubusercontent.com/JustinTimperio/warp-cli/master/build/inst
 ### Uninstall
 Warp-CLI will remove itself from the machine but WDT will remain installed.
 ```
-/opt/warp-cli/core/remove.sh
+/opt/warp-cli/build/remove.sh
 ```
 
 ### Other Setup and Usage Information
