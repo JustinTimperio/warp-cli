@@ -7,9 +7,7 @@ import subprocess
 
 
 def escape_bash_input(astr):
-    '''
-    Uses regex subsitution to safely escape bash input.
-    '''
+    '''Uses regex subsitution to safely escape bash input.'''
     return re.sub("(!| |\$|#|&|\"|\'|\(|\)|\||<|>|`|\\\|;)", r"\\\1", astr)
 
 
