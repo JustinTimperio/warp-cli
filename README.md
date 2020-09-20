@@ -1,4 +1,4 @@
-# Warp-CLI - v3.0.0
+# Warp-CLI - v3.0.1
 ![Codacy grade](https://img.shields.io/codacy/grade/5215996113c94fc4885dae3aa4a26a35?label=codacy%20grade&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/justintimperio/warp-cli?style=for-the-badge)\
 TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.

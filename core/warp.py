@@ -32,12 +32,12 @@ def build_command(typ, arguments, fix_hostname, threads, throttle_speed, report_
 
     # Apply Hostname Fix If Needed
     if fix_hostname:
-        ip_fetch = str(" ip a | grep -v -E '127.0.0.1|00:00:00:00|inet6' | grep -Po '\d+.\d+.\d+.\d+\/' | rev | cut -c2- | rev")
+        ip_fetch = str("/usr/bin/ip a | /usr/bin/grep -v -E '127.0.0.1|00:00:00:00|inet6' | /usr/bin/grep -Po '\d+.\d+.\d+.\d+\/' | /usr/bin/rev | /usr/bin/cut -c2- | /usr/bin/rev")
         if typ == 'ship':
-            ip_cmd = 'ssh ' + arguments[2] + ip_fetch
+            ip_cmd = '/usr/bin/ssh ' + arguments[2] + ' ' + ip_fetch
 
         elif typ == 'push':
-            ip_cmd = 'ssh ' + arguments[1] + ip_fetch
+            ip_cmd = '/usr/bin/ssh ' + arguments[1] + ' ' + ip_fetch
 
         elif typ == 'fetch':
             ip_cmd = str(ip_fetch)
@@ -67,21 +67,21 @@ def run_command(cmd):
     if cmd[0] == 'ship':
         # Build and Start Recv Session
         recv_path = escape_bash_input(cmd[4])
-        recv_cmd = 'ssh ' + cmd[3] + ' wdt ' + cmd[5] + ' -directory ' + recv_path
+        recv_cmd = '/usr/bin/ssh ' + cmd[3] + ' /usr/bin/wdt ' + cmd[5] + ' -directory ' + recv_path
         run_cmd = subprocess.Popen(recv_cmd, stdout=subprocess.PIPE, shell=True)
         wdt_url = str(run_cmd.stdout.readline().strip())[1:]
 
         # Build and Start Sender Session
         send_path = escape_bash_input(cmd[2])
-        send_cmd = 'ssh ' + cmd[1] + ' wdt ' + cmd[6] + ' -directory ' + send_path + ' -'
-        os.system("echo " + wdt_url + " | " + send_cmd)
+        send_cmd = '/usr/bin/ssh ' + cmd[1] + ' /usr/bin/wdt ' + cmd[6] + ' -directory ' + send_path + ' -'
+        os.system("/usr/bin/echo " + wdt_url + " | " + send_cmd)
 
     elif cmd[0] == 'push':
         # Build Command
         recv_path = escape_bash_input(cmd[3])
-        recv_cmd = 'ssh ' + cmd[2] + ' wdt ' + cmd[4] + ' -directory ' + recv_path
+        recv_cmd = '/usr/bin/ssh ' + cmd[2] + ' /usr/bin/wdt ' + cmd[4] + ' -directory ' + recv_path
         send_path = escape_bash_input(cmd[1])
-        send_cmd = 'wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
+        send_cmd = '/usr/bin/wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
 
         # Run Command
         os.system(recv_cmd + ' | ' + send_cmd)
@@ -89,9 +89,9 @@ def run_command(cmd):
     elif cmd[0] == 'fetch':
         # Build Command
         recv_path = escape_bash_input(cmd[3])
-        recv_cmd = 'wdt ' + cmd[4] + ' -directory ' + recv_path
+        recv_cmd = '/usr/bin/wdt ' + cmd[4] + ' -directory ' + recv_path
         send_path = escape_bash_input(cmd[2])
-        send_cmd = 'ssh ' + cmd[1] + ' wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
+        send_cmd = '/usr/bin/ssh ' + cmd[1] + ' /usr/bin/wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
 
         # Run Command
         os.system(recv_cmd + ' | ' + send_cmd)
@@ -105,7 +105,7 @@ def store_macro(name, cmd):
     macro_name = escape_bash_input(name)
     storage_path = os.path.expanduser('~') + '/.warp/macros'
     if not os.path.exists(storage_path):
-        os.system('mkdir -p ' + storage_path)
+        os.makedirs(storage_path)
 
     # Pickle Transfer Command
     with open(storage_path + '/' + macro_name, 'wb') as m:
@@ -179,8 +179,8 @@ args = parser.parse_args()
 
 if args.version:
     print('Warp-CLI Version: 3.0.0')
-    os.system('wdt --version | tr a-z A-Z')
-    os.system('echo "FOLLY Version:" `cd /opt/warp-cli/build/folly && git describe`')
+    os.system('/usr/bin/wdt --version | tr a-z A-Z')
+    os.system('/usr/bin/echo "FOLLY Version:" `cd /opt/warp-cli/build/folly && /usr/bin/git describe`')
 
 if args.ship:
     cmd = build_command('ship', args.ship, args.fix_hostname, args.threads, args.throttle_speed,
