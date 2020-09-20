@@ -32,7 +32,7 @@ def build_command(typ, arguments, fix_hostname, threads, throttle_speed, report_
 
     # Apply Hostname Fix If Needed
     if fix_hostname:
-        ip_fetch = str("/usr/bin/ip a | /usr/bin/grep -v -E '127.0.0.1|00:00:00:00|inet6' | /usr/bin/grep -Po '\d+.\d+.\d+.\d+\/' | /usr/bin/rev | /usr/bin/cut -c2- | /usr/bin/rev")
+        ip_fetch = str("/bin/ip a | /bin/grep -v -E '127.0.0.1|00:00:00:00|inet6' | /bin/grep -Po '\d+.\d+.\d+.\d+\/' | /bin/rev | /bin/cut -c2- | /bin/rev")
         if typ == 'ship':
             ip_cmd = '/usr/bin/ssh ' + arguments[2] + ' ' + ip_fetch
 
@@ -74,7 +74,7 @@ def run_command(cmd):
         # Build and Start Sender Session
         send_path = escape_bash_input(cmd[2])
         send_cmd = '/usr/bin/ssh ' + cmd[1] + ' /usr/bin/wdt ' + cmd[6] + ' -directory ' + send_path + ' -'
-        os.system("/usr/bin/echo " + wdt_url + " | " + send_cmd)
+        os.system("/bin/echo " + wdt_url + " | " + send_cmd)
 
     elif cmd[0] == 'push':
         # Build Command
@@ -180,7 +180,7 @@ args = parser.parse_args()
 if args.version:
     print('Warp-CLI Version: 3.0.0')
     os.system('/usr/bin/wdt --version | tr a-z A-Z')
-    os.system('/usr/bin/echo "FOLLY Version:" `cd /opt/warp-cli/build/folly && /usr/bin/git describe`')
+    os.system('/bin/echo "FOLLY Version:" `cd /opt/warp-cli/build/folly && /usr/bin/git describe`')
 
 if args.ship:
     cmd = build_command('ship', args.ship, args.fix_hostname, args.threads, args.throttle_speed,

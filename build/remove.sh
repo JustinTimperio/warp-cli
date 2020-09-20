@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-rm -fR /opt/warp-cli
-rm -f /usr/bin/warp
+sudo rm -fR /opt/warp-cli
+sudo rm -f /usr/bin/warp
 echo Removed Warp-CLI!
