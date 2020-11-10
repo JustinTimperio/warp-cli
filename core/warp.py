@@ -178,7 +178,7 @@ parser.add_argument("-v", "--version", action='store_true',
 args = parser.parse_args()
 
 if args.version:
-    print('Warp-CLI Version: 3.0.1')
+    print('Warp-CLI Version: 3.0.2')
     os.system('/usr/bin/wdt --version | tr a-z A-Z')
     os.system('/bin/echo "FOLLY Version:" `cd /opt/warp-cli/build/folly && /usr/bin/git describe`')
 

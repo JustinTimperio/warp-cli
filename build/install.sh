@@ -68,8 +68,9 @@ echo ''
 
 # Fetch Folly
 git clone https://github.com/facebook/folly.git $bd/folly
+cd $bd/folly
+git checkout ca78b4cec2f4c94189d487120d6beae6a86ada65
 cd $bd 
-git checkout $(git describe --abbrev=0 --always)
 
 echo ''
 echo '===================================='
@@ -79,6 +80,9 @@ echo ''
 
 # Clone and Build WDT From Source
 git clone https://github.com/facebook/wdt.git $bd/wdt
+cd $bd/wdt
+git checkout 0184e65ecd50ab337971ac7ddcb2d83f209e0ef0
+cd $bd 
 mkdir $bd_tmp
 
 # Patch CMakeList.txt If Needed
