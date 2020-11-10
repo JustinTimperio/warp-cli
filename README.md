@@ -1,4 +1,4 @@
-# Warp-CLI - v3.0.1
+# Warp-CLI - v3.0.2
 ![Codacy grade](https://img.shields.io/codacy/grade/5215996113c94fc4885dae3aa4a26a35?label=codacy%20grade&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/justintimperio/warp-cli?style=for-the-badge)\
 TLDR: Warp is a CLI tool designed to make interacting with Facebook's [Warp Speed Data Transfer (WDT)](https://github.com/facebook/wdt) pain-free.
@@ -77,7 +77,7 @@ curl https://raw.githubusercontent.com/JustinTimperio/warp-cli/master/build/inst
 - Arch Linux and Manjaro
 - Ubuntu 20.xx, 19.xx, 18.xx Workstation and Server
 - Debian 10.x and 9.x
-- Fedora 30, 29 and 28 Workstation and Server
+- Fedora 32, 31, 30, 29 and 28 Workstation and Server
 - CentOS 8
 
 ### Uninstall
