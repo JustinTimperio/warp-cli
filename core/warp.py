@@ -168,7 +168,7 @@ parser.add_argument("-m", "--macro", metavar='MACRO_NAME',
 parser.add_argument("-gm", "--gen_macro", metavar='MACRO_NAME',
                     help="Generate a new macro. This will overwrite any old macro's with the same name.")
 parser.add_argument("-v", "--version", action='store_true',
-                    help="List Warp-CLI, WDT, and FOLLY Version.")
+                    help="List Warp-CLI & WDT Version")
 
 
 ############
@@ -180,7 +180,7 @@ args = parser.parse_args()
 if args.version:
     print('Warp-CLI Version: 3.0.2')
     os.system('/usr/bin/wdt --version | tr a-z A-Z')
-    os.system('/bin/echo "FOLLY Version:" `cd /opt/warp-cli/build/folly && /usr/bin/git describe`')
+
 
 if args.ship:
     cmd = build_command('ship', args.ship, args.fix_hostname, args.threads, args.throttle_speed,
