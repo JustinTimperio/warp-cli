@@ -80,7 +80,7 @@ curl https://raw.githubusercontent.com/JustinTimperio/warp-cli/master/build/inst
 - Fedora 32, 31, 30, 29 and 28 Workstation and Server
 - CentOS 8
 
-** OSX Catalina +/- Install script in build directory now.  Run it from the terminal and it should fully install wdt and warp!
+** OSX Catalina Install script in build directory now.  Run it from the terminal and it should fully install wdt and warp!
 
 ### Uninstall
 Warp-CLI will remove itself from the machine but WDT will remain installed.
