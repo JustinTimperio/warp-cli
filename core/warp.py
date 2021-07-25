@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!env python3
 import re
 import os
 import pickle
@@ -34,10 +34,10 @@ def build_command(typ, arguments, fix_hostname, threads, throttle_speed, report_
     if fix_hostname:
         ip_fetch = str("/bin/ip a | /bin/grep -v -E '127.0.0.1|00:00:00:00|inet6' | /bin/grep -Po '\d+.\d+.\d+.\d+\/' | /bin/rev | /bin/cut -c2- | /bin/rev")
         if typ == 'ship':
-            ip_cmd = '/usr/bin/ssh ' + arguments[2] + ' ' + ip_fetch
+            ip_cmd = 'ssh ' + arguments[2] + ' ' + ip_fetch
 
         elif typ == 'push':
-            ip_cmd = '/usr/bin/ssh ' + arguments[1] + ' ' + ip_fetch
+            ip_cmd = 'ssh ' + arguments[1] + ' ' + ip_fetch
 
         elif typ == 'fetch':
             ip_cmd = str(ip_fetch)
@@ -67,21 +67,21 @@ def run_command(cmd):
     if cmd[0] == 'ship':
         # Build and Start Recv Session
         recv_path = escape_bash_input(cmd[4])
-        recv_cmd = '/usr/bin/ssh ' + cmd[3] + ' /usr/bin/wdt ' + cmd[5] + ' -directory ' + recv_path
+        recv_cmd = 'ssh ' + cmd[3] + ' wdt ' + cmd[5] + ' -directory ' + recv_path
         run_cmd = subprocess.Popen(recv_cmd, stdout=subprocess.PIPE, shell=True)
         wdt_url = str(run_cmd.stdout.readline().strip())[1:]
 
         # Build and Start Sender Session
         send_path = escape_bash_input(cmd[2])
-        send_cmd = '/usr/bin/ssh ' + cmd[1] + ' /usr/bin/wdt ' + cmd[6] + ' -directory ' + send_path + ' -'
+        send_cmd = 'ssh ' + cmd[1] + ' wdt ' + cmd[6] + ' -directory ' + send_path + ' -'
         os.system("/bin/echo " + wdt_url + " | " + send_cmd)
 
     elif cmd[0] == 'push':
         # Build Command
         recv_path = escape_bash_input(cmd[3])
-        recv_cmd = '/usr/bin/ssh ' + cmd[2] + ' /usr/bin/wdt ' + cmd[4] + ' -directory ' + recv_path
+        recv_cmd = 'ssh ' + cmd[2] + ' wdt ' + cmd[4] + ' -directory ' + recv_path
         send_path = escape_bash_input(cmd[1])
-        send_cmd = '/usr/bin/wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
+        send_cmd = 'wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
 
         # Run Command
         os.system(recv_cmd + ' | ' + send_cmd)
@@ -89,9 +89,9 @@ def run_command(cmd):
     elif cmd[0] == 'fetch':
         # Build Command
         recv_path = escape_bash_input(cmd[3])
-        recv_cmd = '/usr/bin/wdt ' + cmd[4] + ' -directory ' + recv_path
+        recv_cmd = 'wdt ' + cmd[4] + ' -directory ' + recv_path
         send_path = escape_bash_input(cmd[2])
-        send_cmd = '/usr/bin/ssh ' + cmd[1] + ' /usr/bin/wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
+        send_cmd = 'ssh ' + cmd[1] + ' wdt ' + cmd[5] + ' -directory ' + send_path + ' -'
 
         # Run Command
         os.system(recv_cmd + ' | ' + send_cmd)
@@ -179,7 +179,7 @@ args = parser.parse_args()
 
 if args.version:
     print('Warp-CLI Version: 3.0.2')
-    os.system('/usr/bin/wdt --version | tr a-z A-Z')
+    os.system('wdt --version | tr a-z A-Z')
 
 
 if args.ship:
