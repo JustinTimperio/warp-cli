@@ -5,7 +5,10 @@ import os
 import pickle
 import argparse
 import subprocess
+import resource
 
+# Make this configurable, but for now jack it up so file limits dont kill u                                                                             
+resource.setrlimit(resource.RLIMIT_NOFILE, (100000,100000))
 
 def escape_bash_input(astr):
     '''Uses regex subsitution to safely escape bash input.'''
