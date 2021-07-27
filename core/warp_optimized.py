@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import re
 import os
 import pickle
@@ -7,7 +6,7 @@ import argparse
 import subprocess
 import resource
 
-# Make this configurable, but for now jack it up so file limits dont kill u
+# Make this configurable, but for now jack it up else you'll get hard to debug errors if you go over the file limit
 resource.setrlimit(resource.RLIMIT_NOFILE, (100000, 100000))
 
 
@@ -51,10 +50,10 @@ def build_command(
             "/bin/ip a | /bin/grep -v -E '127.0.0.1|00:00:00:00|inet6' | /bin/grep -Po '\d+.\d+.\d+.\d+\/' | /bin/rev | /bin/cut -c2- | /bin/rev"
         )
         if typ == "ship":
-            ip_cmd = "ssh " + arguments[2] + " " + ip_fetch
+            ip_cmd = "/usr/bin/ssh " + arguments[2] + " " + ip_fetch
 
         elif typ == "push":
-            ip_cmd = "ssh " + arguments[1] + " " + ip_fetch
+            ip_cmd = "/usr/bin/ssh " + arguments[1] + " " + ip_fetch
 
         elif typ == "fetch":
             ip_cmd = str(ip_fetch)
@@ -106,23 +105,50 @@ def run_command(cmd):
     if cmd[0] == "ship":
         # Build and Start Recv Session
         recv_path = escape_bash_input(cmd[4])
-        recv_cmd = "ssh " + cmd[3] + " wdt " + cmd[5] + " -directory " + recv_path
+        recv_cmd = (
+            "/usr/bin/ssh "
+            + cmd[3]
+            + " /usr/bin/wdt "
+            + cmd[5]
+            + " -directory "
+            + recv_path
+        )
         run_cmd = subprocess.Popen(recv_cmd, stdout=subprocess.PIPE, shell=True)
         wdt_url = str(run_cmd.stdout.readline().strip())[1:]
 
         # Build and Start Sender Session
         send_path = escape_bash_input(cmd[2])
         send_cmd = (
-            "ssh " + cmd[1] + " wdt " + cmd[6] + " -directory " + send_path + " -"
+            "/usr/bin/ssh "
+            + cmd[1]
+            + " /usr/bin/wdt "
+            + cmd[6]
+            + " -directory "
+            + send_path
+            + " -"
         )
         os.system("/bin/echo " + wdt_url + " | " + send_cmd)
 
     elif cmd[0] == "push":
         # Build Command
         recv_path = escape_bash_input(cmd[3])
-        recv_cmd = "ssh " + cmd[2] + " wdt " + cmd[4] + " -directory " + recv_path
+        recv_cmd = (
+            "/usr/bin/ssh "
+            + cmd[2]
+            + " /usr/bin/wdt "
+            + cmd[4]
+            + " -abort_check_interval_millis 0  -encryption_tag_interval_bytes 0  -disk_sync_interval_mb -1 -disable_preallocation -buffer_size 20048 -encryption_type none  -namespace_receiver_limit 0 -max_mbytes_per_sec -1   -block_size_mbytes 6 -iv_change_interval_mb 0  -write_timeout_millis 10000 -skip_fadvise  -disable_sender_verification_during_resumption  -directory "
+            + recv_path
+        )
+
         send_path = escape_bash_input(cmd[1])
-        send_cmd = "wdt " + cmd[5] + " -directory " + send_path + " -"
+        send_cmd = (
+            "/usr/bin/wdt "
+            + cmd[5]
+            + " -encryption_tag_interval_bytes 0 -disk_sync_interval_mb -1 -disable_preallocation -buffer_size 20048 -abort_check_interval_millis 0 -block_size_mbytes 6 -odirect_reads   -skip_fadvise -iv_change_interval_mb 0 -full_reporting    -namespace_receiver_limit 0 -write_timeout_millis 10000 -two_phases -open_files_during_discovery -1 -disable_sender_verification_during_resumption -encryption_type none  -max_mbytes_per_sec -1   -directory "
+            + send_path
+            + " -"
+        )
 
         # Run Command
         os.system(recv_cmd + " | " + send_cmd)
@@ -130,10 +156,16 @@ def run_command(cmd):
     elif cmd[0] == "fetch":
         # Build Command
         recv_path = escape_bash_input(cmd[3])
-        recv_cmd = "wdt " + cmd[4] + " -directory " + recv_path
+        recv_cmd = "/usr/bin/wdt " + cmd[4] + " -directory " + recv_path
         send_path = escape_bash_input(cmd[2])
         send_cmd = (
-            "ssh " + cmd[1] + " wdt " + cmd[5] + " -directory " + send_path + " -"
+            "/usr/bin/ssh "
+            + cmd[1]
+            + " /usr/bin/wdt "
+            + cmd[5]
+            + " -directory "
+            + send_path
+            + " -"
         )
 
         # Run Command
@@ -266,7 +298,10 @@ parser.add_argument(
     help="Generate a new macro. This will overwrite any old macro's with the same name.",
 )
 parser.add_argument(
-    "-v", "--version", action="store_true", help="List Warp-CLI & WDT Version"
+    "-v",
+    "--version",
+    action="store_true",
+    help="List Warp-CLI, WDT, and FOLLY Version.",
 )
 
 
@@ -278,8 +313,10 @@ args = parser.parse_args()
 
 if args.version:
     print("Warp-CLI Version: 3.0.2")
-    os.system("wdt --version | tr a-z A-Z")
-
+    os.system("/usr/bin/wdt --version | tr a-z A-Z")
+    os.system(
+        '/bin/echo "FOLLY Version:" `cd /opt/warp-cli/build/folly && /usr/bin/git describe`'
+    )
 
 if args.ship:
     cmd = build_command(
