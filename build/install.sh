@@ -34,7 +34,7 @@ elif [[ $osname == 'arch' ]] || [[ $osname == 'manjaro' ]]; then
 ## NOT SUPPORTED
 else
   echo $osname Is Not Supported!
-  exit
+  exit 1
 fi
 
 #####################
