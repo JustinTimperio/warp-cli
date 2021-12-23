@@ -4,7 +4,7 @@ if [[ "root" == `whoami` ]]; then
    "
                                     Hi
 
-It is not advised to run this whole install script as root.  You will be prompted for the sudo p/w when it is needed. Please re-run w/out using sudo or as root.  
+It is not advised to run this whole install script as root.  You will be prompted for the sudo p/w when it is needed. Please re-run w/out using sudo or as root.
 
 If you do still wish to run as root, simply delete this if statement and re-run...brew is going to complain though.
 
@@ -29,11 +29,11 @@ echo ''
 
 # Check if developertools are installed.
 echo """
-Checking to see if the OSX developer tools are installed. 
+Checking to see if the OSX developer tools are installed.
 If not, you'll get a popup asking if you'd like to install
 the tools. You do. Install them, this will take ~15m.  If
 You have the tools installed, you'll just see your version
-of git. oh- if you do install the dev tools, you won't 
+of git. oh- if you do install the dev tools, you won't
 need to do it again unless you decide to upgrade.
 
 A few commands will require you to enter your sudo p/w, ie:
@@ -50,6 +50,21 @@ git --version
 echo "Well, off we go."
 
 sleep .5
+
+echo ''
+echo '===================================='
+echo ' gtest needed for latter MACs       '
+echo '===================================='
+echo ''
+
+git clone https://github.com/google/googletest gtest
+cd gtest
+mkdir build
+cd build
+cmake .. -DCMAKE_CXX_STANDARD=17
+make
+make install
+cd ../../../
 
 echo ''
 echo '===================================='
@@ -96,7 +111,7 @@ echo ''
 
 # Clone and Build WDT From Source
 sudo git clone https://github.com/facebook/wdt.git $bd/wdt
-sudo cd $bd 
+sudo cd $bd
 sudo mkdir $bd_tmp
 
 echo ''
@@ -139,4 +154,4 @@ sudo make install
 #echo ''
 #echo '===============and=================='
 #echo ''
-warp -v 
+warp -v
