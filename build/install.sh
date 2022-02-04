@@ -24,8 +24,9 @@ if [[ $osname == 'ubuntu' ]] || [[ $osname == 'debian' ]]; then
 ## CENTOS
 elif [[ $osname == 'centos' ]] || [[ $osname == 'fedora' ]]; then
   # Install Dependencies
-  yum -y install git python38 cmake boost-devel openssl jemalloc glog-devel double-conversion-devel make automake gcc gcc-c++ kernel-devel gtest-devel openssl-devel libevent-devel
-
+  #yum -y install git python38 cmake boost-devel openssl jemalloc glog-devel double-conversion-devel make automake gcc gcc-c++ kernel-devel gtest-devel openssl-devel libevent-devel
+  echo pass
+  
 ## ARCH
 elif [[ $osname == 'arch' ]] || [[ $osname == 'manjaro' ]]; then
   # Install Dependencies
@@ -100,7 +101,7 @@ echo ''
 
 # Make and Install
 cd $bd_tmp
-cmake -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_BUILD_TYPE=Release ../
+cmake3 -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_BUILD_TYPE=Release ../
 make -j
 make install
 
