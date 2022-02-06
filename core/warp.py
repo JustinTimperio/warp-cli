@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 
-import re
+import argparse
 import os
 import pickle
-import argparse
-import subprocess
+import re
 import resource
+import subprocess
+import sys
+import time
 
-# Make this configurable, but for now jack it up so file limits dont kill u
-resource.setrlimit(resource.RLIMIT_NOFILE, (100000, 100000))
 
+# Attempting to set soft file ulimit to just shy of it's max 
+try:
+    flims = resource.getrlimit( resource.RLIMIT_OFILE )
+    resource.setrlimit( resource.RLIMIT_NOFILE, ( flims[1]-100, flims[1]-100 ))
+
+except Exception as e:
+    print( f"-->WARNING<--\n  {e}\n  Resetting ulimit failed.  warp will proceed, but wdt can appear to be using 10+x more files than it is depending on the size of the transfer. If you exceed your system limit, generally tiresome degubbung ensues.  If you're seeing this warning and have problems, look to your ulimit first.", file=sys.stderr )
+    time.sleep(2.6)
+    print( "and you're off, this program acccepts a -h if you need more info.", file=sys.stderr )
 
 def escape_bash_input(astr):
     """Uses regex subsitution to safely escape bash input."""
